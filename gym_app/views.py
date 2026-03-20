@@ -10,9 +10,11 @@ def home(request):
     """Home page"""
     memberships = Membership.objects.filter(is_active=True)
     classes = Class.objects.all()
+    recent_posts = NewsPost.objects.filter(is_published=True)[:2]
     context = {
         'memberships': memberships,
         'classes': classes,
+        'recent_posts': recent_posts,
     }
     return render(request, 'gym_app/home.html', context)
 

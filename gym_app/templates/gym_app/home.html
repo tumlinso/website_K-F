@@ -4,37 +4,53 @@
 
 {% block content %}
 <section class="hero">
-    <div class="hero-content">
-        <p class="hero-kicker">Das Vereinsstudio in Puchheim</p>
-        <h2>FC Puchheim e.V. Kraft und Fitness</h2>
-        <p>Bei uns lebt Fitness, Kraftsport, Rehatraining und gesundes Training fur jedes Level.</p>
-        <div class="hero-actions">
-            <a href="{% url 'contact' %}" class="btn btn-primary">Jetzt Probemonat anfragen</a>
-            <a href="{% url 'classes' %}" class="btn btn-secondary">Kurse entdecken</a>
+    <div class="container hero-grid">
+        <div class="hero-copy">
+            <p class="hero-kicker">Das Vereinsstudio in Puchheim</p>
+            <h1>FC Puchheim e.V. Fitness-Studio</h1>
+            <p class="hero-lead">Bei uns lebt Fitness, Kraftsport, Rehatraining, Bodybuilding und gesundes Training fur jedes Level.</p>
+            <div class="hero-actions">
+                <a href="{% url 'contact' %}" class="btn btn-primary">Jetzt Probemonat vereinbaren</a>
+                <a href="{% url 'classes' %}" class="btn btn-secondary">Kurse entdecken</a>
+            </div>
+        </div>
+
+        <div class="hero-side">
+            <div class="hero-box">
+                <h3>Schnellkontakt</h3>
+                <div class="hero-link-grid">
+                    <a href="https://www.instagram.com/fcpuchheim_fitness/" target="_blank" rel="noopener noreferrer" class="hero-link">Instagram</a>
+                    <a href="tel:08980078856" class="hero-link">089 80078856</a>
+                    <a href="mailto:fitnesstrainer@fc-puchheim.de" class="hero-link">E-Mail senden</a>
+                </div>
+            </div>
+
+            <div class="hero-box hero-box-dark">
+                <h3>Old-School trifft modern</h3>
+                <p>Seit 1997 steht unser Studio fur klare Betreuung, echte Trainingskultur und Kraftsport ohne Schnickschnack.</p>
+            </div>
         </div>
     </div>
 </section>
 
-<section class="home-intro">
+<section class="home-badges">
     <div class="container">
-        <h2>Willkommen im K+F Fitnessstudio</h2>
-        <p class="subtitle">Teil des FC Puchheim e.V. mit Tradition, Kompetenz und moderner Trainingsbetreuung.</p>
-        <div class="features-grid">
-            <div class="feature">
+        <div class="feature-strip">
+            <div class="feature feature-accent">
                 <h3>Moderne Ausrüstung</h3>
                 <p>Freihantel- und Geratebereiche fur effektives Kraft- und Athletiktraining.</p>
             </div>
             <div class="feature">
-                <h3>Professionelle Trainer</h3>
-                <p>Erfahrene Ansprechpartner fur Trainingsplanung, Technik und Zielbegleitung.</p>
+                <h3>Trainer vor Ort</h3>
+                <p>Erfahrene Ansprechpartner fur Technik, Trainingsplanung und Begleitung.</p>
+            </div>
+            <div class="feature feature-dark">
+                <h3>Reha bis Leistung</h3>
+                <p>Vom Wiedereinstieg bis zum ambitionierten Kraftsport ist alles dabei.</p>
             </div>
             <div class="feature">
-                <h3>Reha und Gesundheit</h3>
-                <p>Vom Wiedereinstieg bis Leistungsaufbau: individuell, sicher und nachhaltig.</p>
-            </div>
-            <div class="feature">
-                <h3>Starke Community</h3>
-                <p>Vereinsatmosphare, in der Anfanger und Fortgeschrittene gleichermassen willkommen sind.</p>
+                <h3>Vereinsatmosphare</h3>
+                <p>Persoenlich, direkt und generationsuebergreifend statt anonymem Massenstudio.</p>
             </div>
         </div>
     </div>
@@ -44,8 +60,9 @@
     <div class="container story-grid">
         <div class="story-photo photo-one" aria-label="Trainingsflaeche"></div>
         <div class="story-text">
+            <p class="story-kicker">Seit 1997</p>
             <h2>Fitness seit uber 25 Jahren</h2>
-            <p>Unser Studio steht fur Kontinuitat und Entwicklung. Die Kombination aus Erfahrung, Vereinskultur und modernen Trainingskonzepten macht K+F zu einem besonderen Ort fur alle, die langfristig stark und gesund bleiben wollen.</p>
+            <p>Gegrundet als Teil des FC Puchheim, ist unser Studio das am langsten bestehende Gym in Puchheim. Genau diese Mischung aus Tradition, Vereinskultur und neuen Trainingskonzepten macht das Training bei uns besonders.</p>
         </div>
     </div>
 </section>
@@ -54,70 +71,98 @@
     <div class="container story-grid reverse">
         <div class="story-photo photo-two" aria-label="Krafttraining"></div>
         <div class="story-text">
+            <p class="story-kicker">Fur alle Leistungsstufen</p>
             <h2>Fitness fur jeden Anspruch</h2>
-            <p>Ob Rehatraining, allgemeine Fitness oder zielgerichteter Kraftsport: Wir begleiten dich mit klaren Programmen und kompetenter Betreuung. Bei uns trainierst du in einer professionellen Umgebung mit echter Vereinsverbundenheit.</p>
+            <p>Ob Rehatraining, allgemeine Fitness oder zielgerichteter Kraftsport: Bei uns ist jeder willkommen. Fur jedes Fachgebiet haben wir spezialisierte Trainer, die dich klar und kompetent auf dem Weg zu deinen Zielen begleiten.</p>
         </div>
     </div>
 </section>
 
 <section class="home-updates">
     <div class="container">
-        <h2>Neueste Beitrage</h2>
+        <div class="section-heading">
+            <h2>Neueste Beitrage</h2>
+            <a href="{% url 'neuigkeiten' %}" class="btn btn-secondary">Alle Neuigkeiten</a>
+        </div>
         <div class="updates-grid">
-            <article class="update-card">
-                <h3>Einladung zur Abteilungsversammlung</h3>
-                <p>Informationen zur nachsten Versammlung der Abteilung Kraft und Fitness mit Agenda und Teilnahmehinweisen.</p>
-                <a href="{% url 'contact' %}" class="btn btn-secondary">Mehr lesen</a>
-            </article>
-            <article class="update-card">
-                <h3>Fruhtraining: erfolgreich gestartet</h3>
-                <p>Unsere Testphase mit fruheren Offnungszeiten lauft. Jetzt mitmachen und den Tag aktiv beginnen.</p>
-                <a href="{% url 'classes' %}" class="btn btn-secondary">Mehr lesen</a>
-            </article>
+            {% if recent_posts %}
+                {% for post in recent_posts %}
+                    <article class="update-card">
+                        <p class="update-meta">{{ post.published_at|date:"d. F Y" }}</p>
+                        <h3>{{ post.title }}</h3>
+                        <p>
+                            {% if post.excerpt %}
+                                {{ post.excerpt }}
+                            {% else %}
+                                {{ post.content|truncatechars:180 }}
+                            {% endif %}
+                        </p>
+                        <a href="{% url 'neuigkeiten_detail' post.slug %}" class="btn btn-secondary">Weiterlesen</a>
+                    </article>
+                {% endfor %}
+            {% else %}
+                <article class="update-card">
+                    <p class="update-meta">Aus dem Studio</p>
+                    <h3>Neuigkeiten erscheinen hier</h3>
+                    <p>Sobald Beitraege im Django Admin veroeffentlicht werden, erscheinen sie direkt auf der Startseite.</p>
+                    <a href="{% url 'neuigkeiten' %}" class="btn btn-secondary">Zur News-Seite</a>
+                </article>
+                <article class="update-card">
+                    <p class="update-meta">Probetraining</p>
+                    <h3>Jetzt Einstieg anfragen</h3>
+                    <p>Wenn du das Studio kennenlernen willst, kannst du direkt ueber die Kontaktseite deinen Probemonat anfragen.</p>
+                    <a href="{% url 'contact' %}" class="btn btn-secondary">Kontakt aufnehmen</a>
+                </article>
+            {% endif %}
         </div>
     </div>
 </section>
 
-<section class="memberships-preview">
+<section class="home-showcase">
     <div class="container">
-        <h2>Unsere Mitgliedschaften</h2>
-        <div class="memberships-grid">
-            {% for membership in memberships %}
-            <div class="membership-card">
-                <h3>{{ membership.name }}</h3>
-                <p class="price">€{{ membership.price }}/{{ membership.frequency }}</p>
-                <p>{{ membership.description|truncatewords:15 }}</p>
-                <a href="{% url 'memberships' %}" class="btn btn-secondary">Mehr erfahren</a>
+        <div class="showcase-grid">
+            <div class="showcase-column">
+                <div class="section-heading">
+                    <h2>Unsere Mitgliedschaften</h2>
+                    <a href="{% url 'memberships' %}" class="btn btn-primary">Alle Tarife</a>
+                </div>
+                <div class="memberships-grid">
+                    {% for membership in memberships|slice:":3" %}
+                    <div class="membership-card">
+                        <h3>{{ membership.name }}</h3>
+                        <p class="price">€{{ membership.price }}/{{ membership.frequency }}</p>
+                        <p>{{ membership.description|truncatewords:15 }}</p>
+                        <a href="{% url 'memberships' %}" class="btn btn-secondary">Mehr erfahren</a>
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
-            {% endfor %}
-        </div>
-    </div>
-</section>
 
-<section class="classes-preview">
-    <div class="container">
-        <h2>Beliebte Kurse</h2>
-        <div class="classes-grid">
-            {% for class in classes|slice:":3" %}
-            <div class="class-card">
-                <h3>{{ class.name }}</h3>
-                <p><strong>Trainer:</strong> {{ class.instructor }}</p>
-                <p><strong>Zeit:</strong> {{ class.schedule_day }} um {{ class.schedule_time|time:"H:i" }} Uhr</p>
-                <p><strong>Dauer:</strong> {{ class.duration_minutes }} Minuten</p>
+            <div class="showcase-column">
+                <div class="section-heading">
+                    <h2>Beliebte Kurse</h2>
+                    <a href="{% url 'classes' %}" class="btn btn-primary">Alle Kurse</a>
+                </div>
+                <div class="classes-grid">
+                    {% for class in classes|slice:":3" %}
+                    <div class="class-card">
+                        <h3>{{ class.name }}</h3>
+                        <p><strong>Trainer:</strong> {{ class.instructor }}</p>
+                        <p><strong>Zeit:</strong> {{ class.schedule_day }} um {{ class.schedule_time|time:"H:i" }} Uhr</p>
+                        <p><strong>Dauer:</strong> {{ class.duration_minutes }} Minuten</p>
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
-            {% endfor %}
-        </div>
-        <div style="text-align: center; margin-top: 20px;">
-            <a href="{% url 'classes' %}" class="btn btn-primary">Alle Kurse anzeigen</a>
         </div>
     </div>
 </section>
 
 <section class="cta">
-    <div class="container">
+    <div class="container cta-inner">
         <h2>Bereit fur dein Training bei K+F?</h2>
         <p>Kontaktiere uns fur Beratung, Probemonat und den passenden Einstieg.</p>
-        <a href="{% url 'contact' %}" class="btn btn-primary btn-large">Kontaktieren Sie uns</a>
+        <a href="{% url 'contact' %}" class="btn btn-primary btn-large">Jetzt Probemonat anfragen</a>
     </div>
 </section>
 {% endblock %}

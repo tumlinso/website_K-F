@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Neuigkeiten | FC Puchheim e.V. Kraft und Fitness{% endblock %}
+
+{% block content %}
+<section class="news-hero news-hero-legacy">
+    <div class="news-hero-inner">
+        <p class="news-kicker">Aktuelles aus dem Studio</p>
+        <h1>Neuigkeiten</h1>
+        <p>Hier erscheinen Ankündigungen, Öffnungszeiten, Vereinsinfos und neue Entwicklungen aus der Abteilung Kraft &amp; Fitness.</p>
+    </div>
+</section>
+
+<section class="news-overview">
+    <div class="news-list-head">
+        <h2>Neueste Beiträge</h2>
+        <p class="news-section-intro">Die wichtigsten Studio-News stehen hier zuerst. So bleibt die Seite ein klarer Blog für alles, was sich bei uns im Gym tut.</p>
+    </div>
+
+    {% if posts %}
+        {% with featured=posts.0 %}
+            <article class="news-featured">
+                {% if featured.image %}
+                    <a href="{% url 'neuigkeiten_detail' featured.slug %}" class="news-featured-media" aria-label="{{ featured.title }} lesen">
+                        <img src="{{ featured.image.url }}" alt="{{ featured.title }}" class="news-featured-image" loading="lazy">
+                    </a>
+                {% endif %}
+                <div class="news-featured-body">
+                    <span class="news-badge">Neuester Beitrag</span>
+                    <div class="news-meta">Abteilung Kraft &amp; Fitness · {{ featured.published_at|date:"d. F Y" }}</div>
+                    <h3><a href="{% url 'neuigkeiten_detail' featured.slug %}">{{ featured.title }}</a></h3>
+                    <p class="news-summary">
+                        {% if featured.excerpt %}
+                            {{ featured.excerpt }}
+                        {% else %}
+                            {{ featured.content|truncatechars:320 }}
+                        {% endif %}
+                    </p>
+                    <div class="news-actions">
+                        <a class="btn btn-primary" href="{% url 'neuigkeiten_detail' featured.slug %}">Beitrag öffnen</a>
+                    </div>
+                </div>
+            </article>
+        {% endwith %}
+
+        {% if posts|length > 1 %}
+            <div class="news-subhead">
+                <h3>Weitere Beiträge</h3>
+                <p>Ältere Meldungen, Rückblicke und Ankündigungen bleiben hier gesammelt sichtbar.</p>
+            </div>
+
+            <div class="news-grid news-grid-archive">
+                {% for post in posts|slice:"1:" %}
+                    <article class="news-card">
+                        {% if post.image %}
+                            <a href="{% url 'neuigkeiten_detail' post.slug %}" class="news-image-link" aria-label="{{ post.title }} lesen">
+                                <img src="{{ post.image.url }}" alt="{{ post.title }}" class="news-image" loading="lazy">
+                            </a>
+                        {% endif %}
+                        <div class="news-meta">Abteilung Kraft &amp; Fitness · {{ post.published_at|date:"d. F Y" }}</div>
+                        <h3><a href="{% url 'neuigkeiten_detail' post.slug %}">{{ post.title }}</a></h3>
+                        <p>
+                            {% if post.excerpt %}
+                                {{ post.excerpt }}
+                            {% else %}
+                                {{ post.content|truncatechars:220 }}
+                            {% endif %}
+                        </p>
+                        <a class="btn btn-primary" href="{% url 'neuigkeiten_detail' post.slug %}">Weiterlesen</a>
+                    </article>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="news-empty">
+            <p>Noch keine Neuigkeiten veröffentlicht.</p>
+            <p>Lege den ersten Beitrag im Django Admin an.</p>
+        </div>
+    {% endif %}
+</section>
+
+<section class="news-connect">
+    <div class="news-list-head">
+        <h2>Weitere Kanäle</h2>
+        <p class="news-section-intro">Neben dem Blog kannst du dem Studio auch über unsere Vereinskanäle folgen.</p>
+    </div>
+
+    <div class="news-channel-grid">
+        <article class="news-channel-card">
+            <div class="news-channel-copy">
+                <p class="news-eyebrow">Instagram</p>
+                <h3>Einblicke aus dem Studio</h3>
+                <p>Auf unserer Instagram-Seite teilen wir laufend Eindrücke aus dem Trainingsalltag, Bilder aus dem Studio und kurze Updates rund um Kraft &amp; Fitness.</p>
+                <a class="btn btn-secondary" href="https://www.instagram.com/fcpuchheim_fitness/" target="_blank" rel="noopener noreferrer">Auf Instagram folgen</a>
+            </div>
+
+            <div class="news-collage">
+                <img src="{% static 'img/trainingsflaeche_belichtet.jpg' %}" alt="Trainingsfläche im Studio" loading="lazy">
+                <img src="{% static 'img/entryway.jpg' %}" alt="Eingangsbereich des Studios" loading="lazy">
+                <img src="{% static 'img/gym_at_night.jpg' %}" alt="Studioansicht am Abend" loading="lazy">
+            </div>
+        </article>
+
+        <article class="news-channel-card news-channel-card-accent">
+            <p class="news-eyebrow">FC Puchheim Periskop</p>
+            <h3>Vereinsnews aus allen 17 Abteilungen</h3>
+            <p>Der monatliche Vereinsnewsletter bündelt Eindrücke und Neuigkeiten aus dem gesamten FC Puchheim. Wenn du nicht nur Studio-News, sondern auch Vereinsleben mitbekommen willst, ist das der richtige Kanal.</p>
+            <a class="btn btn-primary" href="https://www.fc-puchheim.de/newsletter/" target="_blank" rel="noopener noreferrer">Zum Periskop</a>
+        </article>
+    </div>
+</section>
+{% endblock %}

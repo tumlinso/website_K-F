@@ -1,0 +1,210 @@
+# K+F Fitnessstudio - Django Website
+
+A modern, responsive gym website built with Django. Perfect for fitness enthusiasts!
+
+## Features
+
+- **Responsive Design**: Works beautifully on desktop, tablet, and mobile devices
+- **Membership Management**: Display different membership tiers with pricing
+- **Class Scheduling**: Showcase fitness classes with instructor information
+- **Contact Form with Email**: Allow visitors to send inquiries with automatic email notifications
+- **Admin Panel**: Manage memberships, classes, and contact submissions
+- **SEO Friendly**: Clean URLs and proper HTML structure
+- **Minimal JavaScript**: Built with Python and CSS, perfect if you prefer backend development
+
+## Project Structure
+
+```
+.
+├── config/              # Django settings and URL configuration
+│   ├── settings.py     # Project settings
+│   ├── urls.py         # Main URL router
+│   └── wsgi.py         # WSGI configuration
+├── gym_app/            # Main application
+│   ├── models.py       # Database models
+│   ├── views.py        # View functions
+│   ├── urls.py         # App URL routing
+│   ├── admin.py        # Admin panel configuration
+│   ├── templates/      # HTML templates
+│   └── static/         # CSS and JavaScript files
+├── manage.py           # Django management script
+├── requirements.txt    # Python dependencies
+└── db.sqlite3         # Database (created after migrations)
+```
+
+## Installation
+
+### Prerequisites
+- Python 3.8+
+- pip (Python package manager)
+
+### Setup Steps
+
+1. **Create a virtual environment** (recommended):
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+
+2. **Install dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Run migrations**:
+   ```bash
+   python manage.py migrate
+   ```
+
+4. **Create a superuser** (for admin panel):
+   ```bash
+   python manage.py createsuperuser
+   ```
+   Follow the prompts to set username, email, and password.
+
+5. **Load sample data** (optional):
+   ```bash
+   python manage.py shell
+   ```
+   Then in the Python shell:
+   ```python
+   from gym_app.models import Membership, Class
+   
+   # Create sample memberships
+   Membership.objects.create(
+       name="Basic",
+       description="Perfect for beginners",
+       price=29.99,
+       frequency="monthly",
+       features="Access to gym equipment\nOpen during business hours\nBasic support"
+   )
+   
+   Membership.objects.create(
+       name="Premium",
+       description="All features included",
+       price=59.99,
+       frequency="monthly",
+       features="24/7 gym access\nAll group classes\nPersonal training sessions\nAdvanced support"
+   )
+   
+   # Create sample classes
+   Class.objects.create(
+       name="High-Intensity Interval Training",
+       description="Burn calories fast with our intense circuit workouts",
+       instructor="Coach Mike",
+       schedule_day="Monday",
+       schedule_time="18:00",
+       duration_minutes=45,
+       max_participants=20
+   )
+   
+   exit()
+   ```
+
+6. **Run the development server**:
+   ```bash
+   python manage.py runserver
+   ```
+
+7. **Visit the site**:
+   - Website: http://localhost:8000
+   - Admin Panel: http://localhost:8000/admin
+
+## Usage
+
+### Adding Memberships
+1. Go to http://localhost:8000/admin
+2. Log in with your superuser credentials
+3. Click "Memberships" and "Add membership"
+4. Fill in the details and save
+
+### Adding Classes
+1. In the admin panel, click "Classes" and "Add class"
+2. Enter class details and save
+3. The class will automatically appear on the Classes page
+
+### View Contact Submissions
+1. In the admin panel, click "Contacts"
+2. View all messages sent through the contact form
+
+## Pages
+
+- **Home** (`/`): Landing page with features and class previews
+- **Memberships** (`/memberships/`): Detailed membership information
+- **Classes** (`/classes/`): Available fitness classes
+- **About** (`/about/`): Information about the gym
+- **Contact** (`/contact/`): Contact form and gym info
+- **Admin** (`/admin/`): Manage site content
+
+## Customization
+
+### Branding
+Edit the gym name and colors in:
+- `base.html`: Change "PowerFit Gym" to your gym name
+- `style.css`: Update the `:root` CSS variables for colors
+
+### Contact Information
+Edit in `templates/gym_app/contact.html`:
+- Address
+- Phone number
+- Email
+- Business hours
+
+### Styling
+All colors and fonts are defined in `gym_app/static/css/style.css`
+- Primary colors: Used for buttons and accents
+- Fonts: Using system fonts (no external dependencies)
+
+## Database Models
+
+### Membership
+- Name, description, price
+- Frequency (monthly/annual)
+- Features list
+- Active status
+
+### Class
+- Name, description, instructor
+- Schedule day and time
+- Duration and max participants
+
+### Contact
+- Name, email, message
+- Created timestamp
+- Read status
+
+## Deployment Considerations
+
+Before deploying to production:
+
+1. Set `DEBUG = False` in `settings.py`
+2. Generate a secure `SECRET_KEY`
+3. Set `ALLOWED_HOSTS` to your domain
+4. Use a production database (PostgreSQL recommended)
+5. Collect static files: `python manage.py collectstatic`
+6. Use a production WSGI server (Gunicorn, uWSGI)
+
+## Troubleshooting
+
+**"ModuleNotFoundError: No module named 'django'"**
+- Make sure you've activated the virtual environment and installed requirements
+
+**"Port 8000 already in use"**
+- Use a different port: `python manage.py runserver 8001`
+
+**Database errors after code changes**
+- Create and apply migrations: `python manage.py makemigrations` then `python manage.py migrate`
+
+## Next Steps
+
+- Add user authentication for member login
+- Implement payment processing
+- Add email notifications
+- Create a booking system for classes
+- Add a blog for fitness tips
+
+## Support
+
+For Django documentation, visit: https://docs.djangoproject.com
+
+Happy coding! 💪

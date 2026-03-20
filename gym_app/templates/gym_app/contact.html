@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Kontakt - K+F Fitnessstudio{% endblock %}
+
+{% block content %}
+<section class="contact-page">
+    <div class="container">
+        <h1>Kontaktieren Sie uns</h1>
+        
+        <div class="contact-wrapper">
+            <div class="contact-info">
+                <h2>Wir freuen uns auf Sie!</h2>
+                <div class="info-item">
+                    <h4>Adresse</h4>
+                    <p>K+F Fitnessstudio<br>FC Puchheim e.V.<br>Puchheim, Bayern</p>
+                </div>
+                <div class="info-item">
+                    <h4>Telefon</h4>
+                    <p>(555) 123-4567</p>
+                </div>
+                <div class="info-item">
+                    <h4>E-Mail</h4>
+                    <p>info@kpf-fitnessstudio.de</p>
+                </div>
+                <div class="info-item">
+                    <h4>Öffnungszeiten</h4>
+                    <p>Montag - Freitag: 5:00 - 23:00 Uhr<br>
+                       Samstag - Sonntag: 7:00 - 21:00 Uhr</p>
+                </div>
+            </div>
+            
+            <form method="post" class="contact-form">
+                {% csrf_token %}
+                <h2>Senden Sie uns eine Nachricht</h2>
+                
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">E-Mail</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="message">Nachricht</label>
+                    <textarea id="message" name="message" rows="5" required></textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-large">Nachricht senden</button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

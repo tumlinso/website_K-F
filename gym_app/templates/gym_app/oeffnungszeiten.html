@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Offnungszeiten - FC Puchheim e.V. Fitness-Studio{% endblock %}
+
+{% block content %}
+<section class="hours-hero">
+    <div class="hours-hero-inner">
+        <h1>Offnungszeiten</h1>
+        <p>FC Puchheim e.V. Fitness-Studio</p>
+    </div>
+</section>
+
+<section class="hours-section">
+    <div class="container">
+        <h2>Unsere Zeiten</h2>
+        <div class="hours-grid">
+            <div class="hours-table-wrap">
+                <table class="hours-table">
+                    <tbody>
+                        <tr><th>Montag</th><td>6:30 - 22:00</td></tr>
+                        <tr><th>Dienstag</th><td>8:30 - 22:00</td></tr>
+                        <tr><th>Mittwoch</th><td>6:30 - 22:00</td></tr>
+                        <tr><th>Donnerstag</th><td>8:30 - 22:00</td></tr>
+                        <tr><th>Freitag</th><td>6:30 - 22:00</td></tr>
+                        <tr><th>Samstag</th><td>13:00 - 17:30</td></tr>
+                        <tr><th>Sonn- und Feiertag</th><td>10:00 - 14:30</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="hours-notes">
+                <h3>Wichtige Hinweise</h3>
+                <p>Grundsatzlich ist wahrend der Offnungszeiten ein Trainer anwesend. An einzelnen Tagen, zum Beispiel in den Schulferien, kann es trainerfreie Zeitfenster geben.</p>
+                <p>Zu den regulären Offnungszeiten sind wir per Telefon und E-Mail erreichbar. Kurzfristige Abweichungen kommunizieren wir uber unsere Kanale und Aushange im Studio.</p>
+                <p>Bei Fragen zu Probetraining, Mitgliedschaft oder Kursen kontaktiere uns gerne direkt uber die Kontaktseite.</p>
+                <a href="{% url 'contact' %}" class="btn btn-primary">Jetzt Kontakt aufnehmen</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="hours-section">
+    <div class="container">
+        <h2>Trainer-Prasenz und Planung</h2>
+        <div class="hours-calendar-placeholder">
+            <p>Ein detaillierter Kalender fur Trainer-Prasenz kann hier als nachster Schritt eingebunden werden. Wenn du willst, setze ich dir als Nächstes direkt einen Wochenplan-Block mit manueller Pflege im Template auf.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

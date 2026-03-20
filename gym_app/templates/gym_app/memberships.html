@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Mitgliedschaften - K+F Fitnessstudio{% endblock %}
+
+{% block content %}
+<section class="memberships-page">
+    <div class="container">
+        <h1>Unsere Mitgliedschaftspläne</h1>
+        <p class="subtitle">Wählen Sie den Plan, der am besten zu Ihren Fitness-Zielen passt</p>
+        
+        <div class="memberships-grid-large">
+            {% for membership in memberships %}
+            <div class="membership-card-large">
+                <h2>{{ membership.name }}</h2>
+                <p class="price">€{{ membership.price }}/{{ membership.frequency }}</p>
+                <p class="description">{{ membership.description }}</p>
+                
+                <h4>Leistungen:</h4>
+                <ul>
+                    {% for feature in membership.features|linebreaks|striptags|split:"<br />" %}
+                    <li>✓ {{ feature }}</li>
+                    {% endfor %}
+                </ul>
+                
+                <button class="btn btn-primary btn-large">Jetzt anmelden</button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Kurse - K+F Fitnessstudio{% endblock %}
+
+{% block content %}
+<section class="classes-page">
+    <div class="container">
+        <h1>Unsere Kurse</h1>
+        <p class="subtitle">Finden Sie einen Kurs, der zu Ihrem Zeitplan passt</p>
+        
+        <div class="classes-list">
+            {% for class in classes %}
+            <div class="class-card-large">
+                <div class="class-info">
+                    <h2>{{ class.name }}</h2>
+                    <p><strong>Trainer:</strong> {{ class.instructor }}</p>
+                    <p><strong>Zeit:</strong> {{ class.schedule_day }} um {{ class.schedule_time|time:"H:i" }} Uhr</p>
+                    <p><strong>Dauer:</strong> {{ class.duration_minutes }} Minuten</p>
+                    <p><strong>Verfügbare Plätze:</strong> {{ class.max_participants }}</p>
+                </div>
+                <div class="class-description">
+                    <p>{{ class.description }}</p>
+                </div>
+                <button class="btn btn-secondary">Anmelden</button>
+            </div>
+            {% empty %}
+            <p>Keine Kurse geplant. Schauen Sie bald wieder vorbei!</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

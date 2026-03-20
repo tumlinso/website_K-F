@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ post.title }} | Neuigkeiten{% endblock %}
+
+{% block content %}
+<section class="news-detail">
+    <div class="news-detail-head">
+        <a class="news-back" href="{% url 'neuigkeiten' %}">Zurueck zu Neuigkeiten</a>
+        <h1>{{ post.title }}</h1>
+        <p class="news-meta">{{ post.published_at|date:"d. F Y" }}</p>
+    </div>
+
+    {% if post.image %}
+        <div class="news-detail-image-wrap">
+            <img src="{{ post.image.url }}" alt="{{ post.title }}" class="news-detail-image" loading="lazy">
+        </div>
+    {% endif %}
+
+    <article class="news-detail-body">
+        {{ post.content|linebreaks }}
+    </article>
+</section>
+
+{% if recent_posts %}
+<section class="news-related">
+    <h2>Weitere Neuigkeiten</h2>
+    <div class="news-grid">
+        {% for related in recent_posts %}
+            <article class="news-card compact">
+                <div class="news-meta">{{ related.published_at|date:"d. F Y" }}</div>
+                <h3><a href="{% url 'neuigkeiten_detail' related.slug %}">{{ related.title }}</a></h3>
+                <p>
+                    {% if related.excerpt %}
+                        {{ related.excerpt }}
+                    {% else %}
+                        {{ related.content|truncatechars:140 }}
+                    {% endif %}
+                </p>
+            </article>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+{% endblock %}

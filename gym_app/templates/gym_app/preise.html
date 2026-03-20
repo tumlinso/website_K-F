@@ -11,52 +11,54 @@
 </section>
 
 <section class="preise-section">
-    <div class="container">
-        <h2>Unsere Tarife</h2>
-        <div class="preise-grid">
-            <article class="preis-card">
-                <h3>Probemonat</h3>
-                <p class="preis-sub">Teste, ob der Sport das Richtige fur dich ist: einen Monat ohne automatische Verlangerung.</p>
-                <p class="preis-amount"><span>EUR</span> 29,-</p>
-                <ul>
-                    <li>Erstgesprach und Eingangstest</li>
-                    <li>Individueller Trainingsplan und Beratung</li>
-                    <li>Einfuhrung in die Ubungen mit Trainer</li>
-                    <li>Sichtbare Fortschritte in 4 Wochen</li>
-                    <li>Fur Mitglieder des FC Puchheim kostenlos</li>
-                </ul>
-                <a href="{% url 'contact' %}" class="btn btn-primary">Mehr erfahren</a>
-            </article>
+    <div class="container collapsible-section">
+        <button type="button" class="collapsible-trigger" aria-expanded="true" aria-controls="preise-content">Unsere Tarife</button>
+        <div class="collapsible-content" id="preise-content">
+            <div class="preise-grid">
+                <article class="preis-card">
+                    <h3>Probemonat</h3>
+                    <p class="preis-sub">Teste, ob der Sport das Richtige fur dich ist: einen Monat ohne automatische Verlangerung.</p>
+                    <p class="preis-amount"><span>EUR</span> 29,-</p>
+                    <ul>
+                        <li>Erstgesprach und Eingangstest</li>
+                        <li>Individueller Trainingsplan und Beratung</li>
+                        <li>Einfuhrung in die Ubungen mit Trainer</li>
+                        <li>Sichtbare Fortschritte in 4 Wochen</li>
+                        <li>Fur Mitglieder des FC Puchheim kostenlos</li>
+                    </ul>
+                    <a href="{% url 'contact' %}" class="btn btn-primary">Mehr erfahren</a>
+                </article>
 
-            <article class="preis-card highlight">
-                <h3>Mitgliedschaft</h3>
-                <p class="preis-sub">Werde Mitglied in der Abteilung Kraft und Fitness des FC Puchheim.</p>
-                <p class="preis-amount"><span>EUR</span> 35,- <small>/ Monat*</small></p>
-                <ul>
-                    <li>Individuelle Trainingsplane und Beratung</li>
-                    <li>Regelmassige Trainingsbetreuung</li>
-                    <li>Mitsprache- und Stimmrecht im Verein</li>
-                    <li>Zugang zu zusatzlichen Angeboten</li>
-                    <li>Ermassigungen fur Schuler und Senioren</li>
-                </ul>
-                <a href="{% url 'contact' %}" class="btn btn-primary">Mehr erfahren</a>
-            </article>
+                <article class="preis-card highlight">
+                    <h3>Mitgliedschaft</h3>
+                    <p class="preis-sub">Werde Mitglied in der Abteilung Kraft und Fitness des FC Puchheim.</p>
+                    <p class="preis-amount"><span>EUR</span> 35,- <small>/ Monat*</small></p>
+                    <ul>
+                        <li>Individuelle Trainingsplane und Beratung</li>
+                        <li>Regelmassige Trainingsbetreuung</li>
+                        <li>Mitsprache- und Stimmrecht im Verein</li>
+                        <li>Zugang zu zusatzlichen Angeboten</li>
+                        <li>Ermassigungen fur Schuler und Senioren</li>
+                    </ul>
+                    <a href="{% url 'contact' %}" class="btn btn-primary">Mehr erfahren</a>
+                </article>
 
-            <article class="preis-card">
-                <h3>Monatskarte</h3>
-                <p class="preis-sub">Bleibe flexibel mit 1- oder 3-Monatskarte fur kurzere Trainingsphasen.</p>
-                <p class="preis-amount"><span>ab EUR</span> 49,- <small>/ Monat*</small></p>
-                <ul>
-                    <li>Keine automatische Verlangerung</li>
-                    <li>Individueller Trainingsplan und Beratung</li>
-                    <li>Ideal fur saisonale Trainingsphasen</li>
-                    <li>Auch ohne Vereinsmitgliedschaft moglich</li>
-                    <li>Ermassigt fur FC Puchheim Mitglieder</li>
-                </ul>
-                <a href="{% url 'contact' %}" class="btn btn-primary">Mehr erfahren</a>
-            </article>
+                <article class="preis-card">
+                    <h3>Monatskarte</h3>
+                    <p class="preis-sub">Bleibe flexibel mit 1- oder 3-Monatskarte fur kurzere Trainingsphasen.</p>
+                    <p class="preis-amount"><span>ab EUR</span> 49,- <small>/ Monat*</small></p>
+                    <ul>
+                        <li>Keine automatische Verlangerung</li>
+                        <li>Individueller Trainingsplan und Beratung</li>
+                        <li>Ideal fur saisonale Trainingsphasen</li>
+                        <li>Auch ohne Vereinsmitgliedschaft moglich</li>
+                        <li>Ermassigt fur FC Puchheim Mitglieder</li>
+                    </ul>
+                    <a href="{% url 'contact' %}" class="btn btn-primary">Mehr erfahren</a>
+                </article>
+            </div>
+            <p class="preis-footnote">*Endgultige Konditionen, Ermassigungen und Laufzeiten erhaltst du im personlichen Beratungsgesprach.</p>
         </div>
-        <p class="preis-footnote">*Endgultige Konditionen, Ermassigungen und Laufzeiten erhaltst du im personlichen Beratungsgesprach.</p>
     </div>
 </section>
 {% endblock %}

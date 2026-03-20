@@ -541,7 +541,59 @@ section h2 {
     margin-bottom: 16px;
 }
 
+.collapsible-section {
+    display: grid;
+    gap: 16px;
+}
+
+.collapsible-trigger {
+    display: inline-block;
+    width: fit-content;
+    max-width: 100%;
+    margin: 0;
+    padding: 10px 18px;
+    background: var(--site-red);
+    border: var(--line);
+    border-radius: 999px;
+    box-shadow: var(--shadow);
+    color: var(--text-light);
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+    font-size: clamp(1.4rem, 2vw, 2.3rem);
+    line-height: 1;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-align: left;
+    cursor: pointer;
+    appearance: none;
+}
+
+.collapsible-trigger:hover {
+    background: var(--site-red-dark);
+}
+
+.collapsible-trigger:active {
+    transform: translateY(2px);
+}
+
+.collapsible-trigger:focus-visible {
+    outline: 3px solid var(--site-white);
+    outline-offset: 3px;
+}
+
+.collapsible-content {
+    display: grid;
+    gap: 16px;
+}
+
+.collapsible-content[hidden] {
+    display: none !important;
+}
+
 .section-heading h2 {
+    margin-bottom: 0;
+}
+
+.section-heading .collapsible-trigger {
     margin-bottom: 0;
 }
 
@@ -569,6 +621,14 @@ section h2 {
 
 .showcase-column .section-heading h2 {
     background: var(--site-black);
+}
+
+.showcase-column .section-heading .collapsible-trigger {
+    background: var(--site-black);
+}
+
+.showcase-column .section-heading .collapsible-trigger:hover {
+    background: #2a2a2a;
 }
 
 .showcase-column .membership-card,

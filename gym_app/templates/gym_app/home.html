@@ -81,10 +81,10 @@
 <section class="home-updates">
     <div class="container">
         <div class="section-heading">
-            <h2>Neueste Beitrage</h2>
+            <button type="button" class="collapsible-trigger" aria-expanded="true" aria-controls="home-updates-content">Neueste Beitrage</button>
             <a href="{% url 'neuigkeiten' %}" class="btn btn-secondary">Alle Neuigkeiten</a>
         </div>
-        <div class="updates-grid">
+        <div class="updates-grid collapsible-content" id="home-updates-content">
             {% if recent_posts %}
                 {% for post in recent_posts %}
                     <article class="update-card">
@@ -123,10 +123,10 @@
         <div class="showcase-grid">
             <div class="showcase-column">
                 <div class="section-heading">
-                    <h2>Unsere Mitgliedschaften</h2>
+                    <button type="button" class="collapsible-trigger" aria-expanded="true" aria-controls="home-memberships-content">Unsere Mitgliedschaften</button>
                     <a href="{% url 'memberships' %}" class="btn btn-primary">Alle Tarife</a>
                 </div>
-                <div class="memberships-grid">
+                <div class="memberships-grid collapsible-content" id="home-memberships-content">
                     {% for membership in memberships|slice:":3" %}
                     <div class="membership-card">
                         <h3>{{ membership.name }}</h3>
@@ -140,10 +140,10 @@
 
             <div class="showcase-column">
                 <div class="section-heading">
-                    <h2>Beliebte Kurse</h2>
+                    <button type="button" class="collapsible-trigger" aria-expanded="true" aria-controls="home-classes-content">Beliebte Kurse</button>
                     <a href="{% url 'classes' %}" class="btn btn-primary">Alle Kurse</a>
                 </div>
-                <div class="classes-grid">
+                <div class="classes-grid collapsible-content" id="home-classes-content">
                     {% for class in classes|slice:":3" %}
                     <div class="class-card">
                         <h3>{{ class.name }}</h3>

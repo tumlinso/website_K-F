@@ -11,18 +11,22 @@
         <div class="memberships-grid-large">
             {% for membership in memberships %}
             <div class="membership-card-large">
-                <h2>{{ membership.name }}</h2>
-                <p class="price">€{{ membership.price }}/{{ membership.frequency }}</p>
-                <p class="description">{{ membership.description }}</p>
-                
-                <h4>Leistungen:</h4>
-                <ul>
-                    {% for feature in membership.features|linebreaks|striptags|split:"<br />" %}
-                    <li>✓ {{ feature }}</li>
-                    {% endfor %}
-                </ul>
-                
-                <button class="btn btn-primary btn-large">Jetzt anmelden</button>
+                <div class="collapsible-section">
+                    <button type="button" class="collapsible-trigger" aria-expanded="true" aria-controls="membership-{{ forloop.counter }}-content">{{ membership.name }}</button>
+                    <div class="collapsible-content" id="membership-{{ forloop.counter }}-content">
+                        <p class="price">€{{ membership.price }}/{{ membership.frequency }}</p>
+                        <p class="description">{{ membership.description }}</p>
+
+                        <h4>Leistungen:</h4>
+                        <ul>
+                            {% for feature in membership.features|linebreaks|striptags|split:"<br />" %}
+                            <li>✓ {{ feature }}</li>
+                            {% endfor %}
+                        </ul>
+
+                        <button class="btn btn-primary btn-large">Jetzt anmelden</button>
+                    </div>
+                </div>
             </div>
             {% endfor %}
         </div>

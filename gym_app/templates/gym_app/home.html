@@ -11,7 +11,7 @@
             <p class="hero-lead">Bei uns lebt Fitness, Kraftsport, Rehatraining, Bodybuilding und gesundes Training fur jedes Level.</p>
             <div class="hero-actions">
                 <a href="{% url 'contact' %}" class="btn btn-primary">Jetzt Probemonat vereinbaren</a>
-                <a href="{% url 'classes' %}" class="btn btn-secondary">Kurse entdecken</a>
+                <a href="{% url 'preise' %}" class="btn btn-secondary">Preise ansehen</a>
             </div>
         </div>
 
@@ -61,8 +61,12 @@
         <div class="story-photo photo-one" aria-label="Trainingsflaeche"></div>
         <div class="story-text">
             <p class="story-kicker">Seit 1997</p>
-            <h2>Fitness seit uber 25 Jahren</h2>
-            <p>Gegrundet als Teil des FC Puchheim, ist unser Studio das am langsten bestehende Gym in Puchheim. Genau diese Mischung aus Tradition, Vereinskultur und neuen Trainingskonzepten macht das Training bei uns besonders.</p>
+            <div class="collapsible-section">
+                <button type="button" class="collapsible-trigger" aria-expanded="true" aria-controls="home-story-history-content">Fitness seit uber 25 Jahren</button>
+                <div class="collapsible-content" id="home-story-history-content">
+                    <p>Gegrundet als Teil des FC Puchheim, ist unser Studio das am langsten bestehende Gym in Puchheim. Genau diese Mischung aus Tradition, Vereinskultur und neuen Trainingskonzepten macht das Training bei uns besonders.</p>
+                </div>
+            </div>
         </div>
     </div>
 </section>
@@ -72,8 +76,12 @@
         <div class="story-photo photo-two" aria-label="Krafttraining"></div>
         <div class="story-text">
             <p class="story-kicker">Fur alle Leistungsstufen</p>
-            <h2>Fitness fur jeden Anspruch</h2>
-            <p>Ob Rehatraining, allgemeine Fitness oder zielgerichteter Kraftsport: Bei uns ist jeder willkommen. Fur jedes Fachgebiet haben wir spezialisierte Trainer, die dich klar und kompetent auf dem Weg zu deinen Zielen begleiten.</p>
+            <div class="collapsible-section">
+                <button type="button" class="collapsible-trigger" aria-expanded="true" aria-controls="home-story-approach-content">Fitness fur jeden Anspruch</button>
+                <div class="collapsible-content" id="home-story-approach-content">
+                    <p>Ob Rehatraining, allgemeine Fitness oder zielgerichteter Kraftsport: Bei uns ist jeder willkommen. Fur jedes Fachgebiet haben wir spezialisierte Trainer, die dich klar und kompetent auf dem Weg zu deinen Zielen begleiten.</p>
+                </div>
+            </div>
         </div>
     </div>
 </section>
@@ -137,32 +145,19 @@
                     {% endfor %}
                 </div>
             </div>
-
-            <div class="showcase-column">
-                <div class="section-heading">
-                    <button type="button" class="collapsible-trigger" aria-expanded="true" aria-controls="home-classes-content">Beliebte Kurse</button>
-                    <a href="{% url 'classes' %}" class="btn btn-primary">Alle Kurse</a>
-                </div>
-                <div class="classes-grid collapsible-content" id="home-classes-content">
-                    {% for class in classes|slice:":3" %}
-                    <div class="class-card">
-                        <h3>{{ class.name }}</h3>
-                        <p><strong>Trainer:</strong> {{ class.instructor }}</p>
-                        <p><strong>Zeit:</strong> {{ class.schedule_day }} um {{ class.schedule_time|time:"H:i" }} Uhr</p>
-                        <p><strong>Dauer:</strong> {{ class.duration_minutes }} Minuten</p>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
         </div>
     </div>
 </section>
 
 <section class="cta">
     <div class="container cta-inner">
-        <h2>Bereit fur dein Training bei K+F?</h2>
-        <p>Kontaktiere uns fur Beratung, Probemonat und den passenden Einstieg.</p>
-        <a href="{% url 'contact' %}" class="btn btn-primary btn-large">Jetzt Probemonat anfragen</a>
+        <div class="collapsible-section">
+            <button type="button" class="collapsible-trigger" aria-expanded="true" aria-controls="home-cta-content">Bereit fur dein Training bei K+F?</button>
+            <div class="collapsible-content" id="home-cta-content">
+                <p>Kontaktiere uns fur Beratung, Probemonat und den passenden Einstieg.</p>
+                <a href="{% url 'contact' %}" class="btn btn-primary btn-large">Jetzt Probemonat anfragen</a>
+            </div>
+        </div>
     </div>
 </section>
 {% endblock %}

@@ -10,18 +10,20 @@
         
         <div class="classes-list">
             {% for class in classes %}
-            <div class="class-card-large">
-                <div class="class-info">
-                    <h2>{{ class.name }}</h2>
-                    <p><strong>Trainer:</strong> {{ class.instructor }}</p>
-                    <p><strong>Zeit:</strong> {{ class.schedule_day }} um {{ class.schedule_time|time:"H:i" }} Uhr</p>
-                    <p><strong>Dauer:</strong> {{ class.duration_minutes }} Minuten</p>
-                    <p><strong>Verfügbare Plätze:</strong> {{ class.max_participants }}</p>
+            <div class="class-card-large collapsible-section">
+                <button type="button" class="collapsible-trigger" aria-expanded="true" aria-controls="class-{{ forloop.counter }}-content">{{ class.name }}</button>
+                <div class="collapsible-content class-card-large-panel" id="class-{{ forloop.counter }}-content">
+                        <div class="class-info">
+                            <p><strong>Trainer:</strong> {{ class.instructor }}</p>
+                            <p><strong>Zeit:</strong> {{ class.schedule_day }} um {{ class.schedule_time|time:"H:i" }} Uhr</p>
+                            <p><strong>Dauer:</strong> {{ class.duration_minutes }} Minuten</p>
+                            <p><strong>Verfügbare Plätze:</strong> {{ class.max_participants }}</p>
+                        </div>
+                        <div class="class-description">
+                            <p>{{ class.description }}</p>
+                        </div>
+                        <button class="btn btn-secondary">Anmelden</button>
                 </div>
-                <div class="class-description">
-                    <p>{{ class.description }}</p>
-                </div>
-                <button class="btn btn-secondary">Anmelden</button>
             </div>
             {% empty %}
             <p>Keine Kurse geplant. Schauen Sie bald wieder vorbei!</p>

@@ -168,12 +168,12 @@ section h2 {
     background: var(--site-red);
     border: var(--line);
     border-radius: 999px;
+    box-shadow: var(--shadow);
     color: var(--text-light);
     font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
     font-size: clamp(1.4rem, 2vw, 2.3rem);
     line-height: 1;
     letter-spacing: 0.04em;
-    text-transform: uppercase;
 }
 
 .subtitle {
@@ -321,6 +321,7 @@ section h2 {
     padding: 7px 12px;
     border: var(--line);
     border-radius: 999px;
+    box-shadow: var(--shadow);
     background: var(--site-red);
     color: var(--text-light);
     font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
@@ -561,7 +562,6 @@ section h2 {
     font-size: clamp(1.4rem, 2vw, 2.3rem);
     line-height: 1;
     letter-spacing: 0.04em;
-    text-transform: uppercase;
     text-align: left;
     cursor: pointer;
     appearance: none;
@@ -609,7 +609,7 @@ section h2 {
 
 .home-showcase .showcase-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 16px;
 }
 
@@ -734,6 +734,13 @@ section h2 {
 }
 
 .class-card-large {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) auto;
+    gap: 16px;
+    align-items: start;
+}
+
+.class-card-large-panel {
     display: grid;
     grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) auto;
     gap: 16px;

@@ -23,21 +23,23 @@
 
 {% if recent_posts %}
 <section class="news-related">
-    <h2>Weitere Neuigkeiten</h2>
-    <div class="news-grid">
-        {% for related in recent_posts %}
-            <article class="news-card compact">
-                <div class="news-meta">{{ related.published_at|date:"d. F Y" }}</div>
-                <h3><a href="{% url 'neuigkeiten_detail' related.slug %}">{{ related.title }}</a></h3>
-                <p>
-                    {% if related.excerpt %}
-                        {{ related.excerpt }}
-                    {% else %}
-                        {{ related.content|truncatechars:140 }}
-                    {% endif %}
-                </p>
-            </article>
-        {% endfor %}
+    <div class="collapsible-section">
+        <button type="button" class="collapsible-trigger" aria-expanded="true" aria-controls="news-related-content">Weitere Neuigkeiten</button>
+        <div class="news-grid collapsible-content" id="news-related-content">
+            {% for related in recent_posts %}
+                <article class="news-card compact">
+                    <div class="news-meta">{{ related.published_at|date:"d. F Y" }}</div>
+                    <h3><a href="{% url 'neuigkeiten_detail' related.slug %}">{{ related.title }}</a></h3>
+                    <p>
+                        {% if related.excerpt %}
+                            {{ related.excerpt }}
+                        {% else %}
+                            {{ related.content|truncatechars:140 }}
+                        {% endif %}
+                    </p>
+                </article>
+            {% endfor %}
+        </div>
     </div>
 </section>
 {% endif %}

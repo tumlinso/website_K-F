@@ -33,6 +33,22 @@
     </div>
 </section>
 
+<section class="live-status">
+    <div class="container live-status-grid">
+        <article class="live-status-card {% if live_status.is_open %}is-open{% else %}is-closed{% endif %}">
+            <p class="live-status-label">Studio</p>
+            <strong>{{ live_status.status_label }}</strong>
+            <p>{{ live_status.status_detail }}</p>
+        </article>
+
+        <article class="live-status-card live-status-card-trainer">
+            <p class="live-status-label">Trainer aktuell</p>
+            <strong>{{ live_status.trainer_name }}</strong>
+            <p>{{ live_status.trainer_detail }}</p>
+        </article>
+    </div>
+</section>
+
 <section class="home-badges">
     <div class="container">
         <div class="feature-strip">

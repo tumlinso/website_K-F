@@ -4,17 +4,17 @@ from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
 from .models import Membership, Class, Contact, NewsPost
+from .live_status import get_home_live_status
 
 
 def home(request):
     """Home page"""
     memberships = Membership.objects.filter(is_active=True)
-    classes = Class.objects.all()
     recent_posts = NewsPost.objects.filter(is_published=True)[:2]
     context = {
         'memberships': memberships,
-        'classes': classes,
         'recent_posts': recent_posts,
+        'live_status': get_home_live_status(),
     }
     return render(request, 'gym_app/home.html', context)
 

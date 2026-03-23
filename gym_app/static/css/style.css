@@ -234,6 +234,62 @@ section h2 {
     background-image: linear-gradient(90deg, rgba(0, 0, 0, 0.72), rgba(195, 13, 20, 0.28)), var(--img-hero);
 }
 
+.live-status {
+    background: linear-gradient(90deg, rgba(17, 17, 17, 0.94), rgba(102, 107, 115, 0.9));
+    color: var(--text-light);
+}
+
+.live-status-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.live-status-card {
+    display: grid;
+    gap: 8px;
+    padding: 18px;
+    border: var(--line);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow);
+    background: var(--site-grey-100);
+    color: var(--text);
+}
+
+.live-status-card.is-open {
+    background: #b8e6af;
+}
+
+.live-status-card.is-closed {
+    background: #efb3b3;
+}
+
+.live-status-card-trainer {
+    background: var(--site-grey-100);
+}
+
+.live-status-label {
+    display: inline-block;
+    width: fit-content;
+    padding: 7px 12px;
+    border: var(--line);
+    border-radius: 999px;
+    box-shadow: var(--shadow);
+    background: var(--site-black);
+    color: var(--text-light);
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.live-status-card strong {
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+    font-size: clamp(1.45rem, 2vw, 2.1rem);
+    letter-spacing: 0.03em;
+    line-height: 1;
+}
+
 .discover-hero {
     background-image: linear-gradient(90deg, rgba(0, 0, 0, 0.72), rgba(195, 13, 20, 0.24)), var(--img-window);
 }
@@ -1083,6 +1139,7 @@ section h2 {
 
 @media (max-width: 1180px) {
     .hero-grid,
+    .live-status-grid,
     .home-showcase .showcase-grid,
     .contact-wrapper,
     .hours-grid,

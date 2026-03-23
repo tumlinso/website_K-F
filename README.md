@@ -143,6 +143,23 @@ Edit the gym name and colors in:
 - `base.html`: Change "PowerFit Gym" to your gym name
 - `style.css`: Update the `:root` CSS variables for colors
 
+### Homepage Live Status Bar
+The homepage can show whether the studio is currently open and which trainer is currently scheduled.
+
+Set these environment variables before starting Django:
+
+```bash
+export GYM_TIMEZONE="Europe/Berlin"
+export TRAINER_CALENDAR_ICS_URL="https://calendar.google.com/calendar/ical/.../basic.ics"
+export TRAINER_CALENDAR_TIMEOUT_SECONDS="5"
+export LIVE_STATUS_CACHE_SECONDS="60"
+```
+
+Notes:
+- Use your Google Calendar ICS feed URL for `TRAINER_CALENDAR_ICS_URL`.
+- The status bar uses the gym opening hours defined in code and the trainer name from the current calendar event summary.
+- Recurring calendar events are supported.
+
 ### Contact Information
 Edit in `templates/gym_app/contact.html`:
 - Address

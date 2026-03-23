@@ -78,6 +78,10 @@ LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
+GYM_TIMEZONE = os.getenv('GYM_TIMEZONE', 'Europe/Berlin')
+TRAINER_CALENDAR_ICS_URL = os.getenv('TRAINER_CALENDAR_ICS_URL', '')
+TRAINER_CALENDAR_TIMEOUT_SECONDS = float(os.getenv('TRAINER_CALENDAR_TIMEOUT_SECONDS', '5'))
+LIVE_STATUS_CACHE_SECONDS = int(os.getenv('LIVE_STATUS_CACHE_SECONDS', '60'))
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'

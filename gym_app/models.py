@@ -15,7 +15,28 @@ class Membership(models.Model):
     frequency = models.CharField(max_length=20, choices=FREQUENCY_CHOICES)
     features = models.TextField(help_text="Features separated by newlines")
     is_active = models.BooleanField(default=True)
-    
+
+    @property
+    def feature_list(self):
+        return [line.strip() for line in self.features.splitlines() if line.strip()]
+
+    @property
+    def frequency_label(self):
+        frequency_labels = {
+            'monthly': 'Monat',
+            'annual': 'Jahr',
+        }
+        return frequency_labels.get(self.frequency, self.frequency)
+
+    @property
+    def detail_url_name(self):
+        detail_routes = {
+            'probemonat': 'probemonat',
+            'mitgliedschaft': 'mitgliedschaft',
+            'monatskarte': 'monatskarte',
+        }
+        return detail_routes.get(self.name.strip().lower(), 'memberships')
+
     def __str__(self):
         return f"{self.name} - ${self.price}/{self.frequency}"
 

@@ -153,14 +153,23 @@
             <button type="button" class="collapsible-trigger" aria-expanded="true" aria-controls="home-memberships-content">Unsere Mitgliedschaften</button>
             <a href="{% url 'memberships' %}" class="btn btn-primary">Alle Tarife</a>
         </div>
-        <div class="memberships-grid collapsible-content" id="home-memberships-content">
+        <div class="home-memberships-grid collapsible-content" id="home-memberships-content">
             {% for membership in memberships|slice:":3" %}
-            <div class="membership-card">
+            <article class="home-membership-card {% if forloop.counter == 2 %}home-membership-card-featured{% endif %}">
                 <h3>{{ membership.name }}</h3>
-                <p class="price">€{{ membership.price }}/{{ membership.frequency }}</p>
-                <p>{{ membership.description|truncatewords:15 }}</p>
-                <a href="{% url 'memberships' %}" class="btn btn-secondary">Mehr erfahren</a>
-            </div>
+                <p class="home-membership-sub">{{ membership.description }}</p>
+                <p class="home-membership-price">
+                    <span class="home-membership-price-prefix">€</span>
+                    {{ membership.price|floatformat:0 }},-
+                    <small>/ {{ membership.frequency_label }}</small>
+                </p>
+                <ul>
+                    {% for feature in membership.feature_list|slice:":5" %}
+                    <li>{{ feature }}</li>
+                    {% endfor %}
+                </ul>
+                <a href="{% url membership.detail_url_name %}" class="btn {% if forloop.counter == 2 %}btn-primary{% else %}btn-secondary{% endif %} home-membership-btn">Mehr erfahren</a>
+            </article>
             {% endfor %}
         </div>
     </div>
@@ -169,8 +178,8 @@
 <section class="cta">
     <div class="container cta-inner">
         <div class="collapsible-section">
-            <button type="button" class="collapsible-trigger" aria-expanded="true" aria-controls="home-cta-content">Bereit fur dein Training bei K+F?</button>
-            <div class="collapsible-content" id="home-cta-content">
+            <h2 class="cta-title">Bereit fur dein Training bei K+F?</h2>
+            <div id="home-cta-content">
                 <p>Kontaktiere uns fur Beratung, Probemonat und den passenden Einstieg.</p>
                 <a href="{% url 'contact' %}" class="btn btn-primary btn-large">Jetzt Probemonat anfragen</a>
             </div>

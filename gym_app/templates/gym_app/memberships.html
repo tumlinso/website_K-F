@@ -19,7 +19,7 @@
 
                         <h4>Leistungen:</h4>
                         <ul>
-                            {% for feature in membership.features|linebreaks|striptags|split:"<br />" %}
+                            {% for feature in membership.feature_list %}
                             <li>✓ {{ feature }}</li>
                             {% endfor %}
                         </ul>

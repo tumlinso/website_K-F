@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Preise Monatskarte - FC Puchheim e.V. Fitness-Studio{% endblock %}
+
+{% block content %}
+<section class="preise-hero">
+    <div class="preise-hero-inner">
+        <h1>Preise - Monatskarte</h1>
+        <p>FC Puchheim e.V. Fitness-Studio</p>
+    </div>
+</section>
+
+<section class="tariff-detail-page">
+    <div class="container tariff-detail-grid">
+        <div class="tariff-detail-copy">
+            <article class="tariff-info-card">
+                <h2>Warum eine Monatskarte?</h2>
+                <p>Die Monatskarte ist für alle, die flexibel bleiben möchten. Sie eignet sich besonders für saisonale Trainingsphasen, für Wiedereinstiege oder wenn du ohne langfristige Vereinsbindung trainieren willst.</p>
+            </article>
+
+            <article class="tariff-info-card">
+                <h2>Leistungen</h2>
+                <p>Auch mit der Monatskarte erhältst du einen individuellen Trainingsplan und Beratung. Sie ist ideal für kurze Trainingsphasen und bleibt ohne automatische Verlängerung planbar.</p>
+            </article>
+        </div>
+
+        <article class="tariff-highlight-card">
+            <h3>Monatskarte</h3>
+            <p class="tariff-highlight-subtitle">Bleibe flexibel mit der 1- oder 3-Monatskarte, wenn du nur für einen kürzeren Zeitraum trainieren willst.</p>
+            <p class="tariff-highlight-price tariff-highlight-price-featured">
+                <span>ab €</span>
+                49,-
+                <small>/ Monat*</small>
+            </p>
+            <ul class="tariff-highlight-list">
+                <li>Keine automatische Verlängerung</li>
+                <li>Individueller Trainingsplan und Beratung</li>
+                <li>Optimal für saisonale Trainingsphasen</li>
+                <li>Auch ohne Vereinsmitgliedschaft möglich</li>
+                <li>Ermäßigt für Mitglieder des FC Puchheim</li>
+            </ul>
+            <a href="{% url 'contact' %}" class="btn btn-secondary btn-large">Jetzt anfragen</a>
+        </article>
+    </div>
+</section>
+{% endblock %}

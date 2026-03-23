@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}Preise Mitgliedschaft - FC Puchheim e.V. Fitness-Studio{% endblock %}
+
+{% block content %}
+<section class="preise-hero">
+    <div class="preise-hero-inner">
+        <h1>Preise - Mitgliedschaft</h1>
+        <p>FC Puchheim e.V. Fitness-Studio</p>
+    </div>
+</section>
+
+<section class="tariff-detail-page">
+    <div class="container tariff-detail-grid">
+        <div class="tariff-detail-copy">
+            <article class="tariff-info-card">
+                <h2>Warum eine Mitgliedschaft?</h2>
+                <p>Du möchtest auch auf lange Sicht Erfolge erzielen und Fitness zu einem Teil deines Lebens machen? Dann ist eine Mitgliedschaft in unserem Fitness-Studio genau das Richtige für dich. Sie ist die kostengünstigste Option und bringt die meisten Vorteile mit sich.</p>
+            </article>
+
+            <article class="tariff-info-card">
+                <h2>Leistungen</h2>
+                <p>Mit individuellen Trainingsplänen und enger Beratung können unsere Trainer dich langfristig beim Erreichen deiner Ziele unterstützen. Zusätzlich erhältst du Mitsprache- und Stimmrecht bei Abteilungsangelegenheiten und Zugang zu weiteren kostenfreien Angeboten innerhalb des Vereins.</p>
+            </article>
+
+            <article class="tariff-info-card">
+                <h2>Preisstruktur</h2>
+                <p>Der Abteilungsbeitrag unseres Fitness-Studios beträgt monatlich 21€. Dazu kommt die Mitgliedschaft im FC Puchheim, die je nach Ermäßigung zwischen 9€ und 14€ kostet. Eine Mitgliedschaft im Fitness-Studio ist nicht ohne Mitgliedschaft im FC Puchheim möglich.</p>
+            </article>
+        </div>
+
+        <article class="tariff-highlight-card tariff-highlight-card-featured">
+            <h3>Mitgliedschaft</h3>
+            <p class="tariff-highlight-subtitle">Werde Mitglied im Fitness-Studio (Abteilung Kraft &amp; Fitness) des FC Puchheim und sei dabei im Club.</p>
+            <p class="tariff-highlight-price">
+                <span>€</span>
+                35,-
+                <small>/ Monat*</small>
+            </p>
+            <ul class="tariff-highlight-list">
+                <li>Individuelle Trainingspläne und Beratung</li>
+                <li>Regelmäßige Trainingsbetreuung</li>
+                <li>Mitsprache- und Stimmrecht</li>
+                <li>Zusätzliche kostenfreie Angebote</li>
+                <li>Ermäßigt u.a. für Schüler und Senioren</li>
+            </ul>
+            <a href="{% url 'contact' %}" class="btn btn-primary btn-large">Jetzt registrieren</a>
+        </article>
+    </div>
+</section>
+
+<section class="tariff-detail-page">
+    <div class="container">
+        <h2>Preise FC Puchheim Mitgliedschaft</h2>
+        <div class="tariff-table-grid">
+            <article class="tariff-table-card">
+                <h3>Aufnahmegebühr (einmalig)</h3>
+                <table class="tariff-table">
+                    <tbody>
+                        <tr><th>Einzelperson</th><td>20€</td></tr>
+                        <tr><th>Familie</th><td>30€</td></tr>
+                    </tbody>
+                </table>
+            </article>
+
+            <article class="tariff-table-card">
+                <h3>Grundbeitrag (pro Monat)</h3>
+                <table class="tariff-table">
+                    <tbody>
+                        <tr><th>Erwachsene (bis 69 Jahre)</th><td>14€</td></tr>
+                        <tr><th>1. Kind (bis 17 Jahre)</th><td>9€</td></tr>
+                        <tr><th>2. und jedes weitere Kind</th><td>8€</td></tr>
+                        <tr><th>Familien (2 Erw. und Kinder)</th><td>30€</td></tr>
+                    </tbody>
+                </table>
+            </article>
+
+            <article class="tariff-table-card">
+                <h3>Ermäßigt (pro Monat)</h3>
+                <table class="tariff-table">
+                    <tbody>
+                        <tr><th>Senioren (ab 70 Jahre)</th><td>10€</td></tr>
+                        <tr><th>Schüler, Azubis, Studenten (bis 26 Jahre)</th><td>9€</td></tr>
+                        <tr><th>Menschen mit Behinderung</th><td>9€</td></tr>
+                    </tbody>
+                </table>
+            </article>
+        </div>
+        <p class="tariff-footnote">*Abteilungsbeitrag plus Vereinsmitgliedschaft im FC Puchheim. Die exakten Gesamtkosten ergeben sich aus der passenden Beitragsgruppe.</p>
+    </div>
+</section>
+{% endblock %}

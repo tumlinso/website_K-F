@@ -508,6 +508,7 @@ section h2 {
 
 .features-grid,
 .memberships-grid,
+.home-memberships-grid,
 .classes-grid,
 .values-grid,
 .updates-grid {
@@ -752,6 +753,91 @@ section h2 {
     min-height: 100%;
 }
 
+.home-memberships-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+}
+
+.home-membership-card {
+    display: grid;
+    align-content: start;
+    gap: 18px;
+    padding: 24px;
+    border: var(--line);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow);
+    background: var(--site-grey-100);
+    color: var(--text);
+    text-align: center;
+}
+
+.home-membership-card h3 {
+    margin: 0;
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+    font-size: clamp(2rem, 2.8vw, 3rem);
+    line-height: 0.95;
+}
+
+.home-membership-sub {
+    min-height: 92px;
+    font-size: 1rem;
+    color: var(--text-soft);
+}
+
+.home-membership-price {
+    margin: 0;
+    padding: 18px 22px;
+    border-radius: 999px;
+    background: #5f646c;
+    color: var(--text-light);
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+    font-size: clamp(2.4rem, 4vw, 4rem);
+    line-height: 0.9;
+}
+
+.home-membership-card-featured .home-membership-price {
+    background: var(--site-red);
+}
+
+.home-membership-price-prefix,
+.home-membership-price small {
+    font-size: 0.52em;
+}
+
+.home-membership-card ul {
+    display: grid;
+    gap: 16px;
+    list-style: none;
+    margin: 0;
+    padding: 6px 0 0;
+    text-align: left;
+}
+
+.home-membership-card li {
+    position: relative;
+    padding-left: 40px;
+    font-size: 1rem;
+}
+
+.home-membership-card li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.32em;
+    width: 20px;
+    height: 20px;
+    border: 5px solid var(--site-red);
+    border-radius: 999px;
+    background: var(--site-white);
+    box-sizing: border-box;
+}
+
+.home-membership-btn {
+    width: min(100%, 240px);
+    justify-self: center;
+}
+
 .cta {
     background-image: linear-gradient(90deg, rgba(0, 0, 0, 0.78), rgba(195, 13, 20, 0.42)), var(--img-night);
     background-size: cover;
@@ -775,10 +861,27 @@ section h2 {
     margin-bottom: 0;
 }
 
+.cta-title {
+    display: block;
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    color: var(--text-light);
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    line-height: 1.1;
+    letter-spacing: 0.02em;
+    text-align: center;
+    text-transform: none;
+}
+
 .memberships-page,
 .classes-page,
 .contact-page,
-.about-page {
+.about-page,
+.tariff-detail-page {
     background-position: center;
     background-size: cover;
 }
@@ -803,6 +906,7 @@ section h2 {
 .classes-page .container,
 .contact-page .container,
 .about-page .container,
+.tariff-detail-page .container,
 .discover-section .container,
 .hours-section .container,
 .preise-section .container,
@@ -861,6 +965,139 @@ section h2 {
     grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) auto;
     gap: 16px;
     align-items: start;
+}
+
+.tariff-detail-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+    gap: 16px;
+    align-items: start;
+}
+
+.tariff-detail-copy {
+    display: grid;
+    gap: 16px;
+}
+
+.tariff-info-card,
+.tariff-table-card {
+    padding: 18px;
+    border: var(--line);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow);
+    background: var(--site-grey-200);
+}
+
+.tariff-info-card h2,
+.tariff-table-card h3 {
+    margin-left: 0;
+}
+
+.tariff-highlight-card {
+    display: grid;
+    align-content: start;
+    gap: 18px;
+    padding: 24px;
+    border: var(--line);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow);
+    background: var(--site-grey-100);
+    color: var(--text);
+    text-align: center;
+}
+
+.tariff-highlight-card-featured {
+    background: linear-gradient(180deg, var(--site-grey-100), #f6dcdc);
+}
+
+.tariff-highlight-card h3 {
+    margin: 0;
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+    font-size: clamp(2rem, 2.8vw, 3rem);
+    line-height: 0.95;
+    text-transform: uppercase;
+}
+
+.tariff-highlight-subtitle {
+    color: var(--text-soft);
+}
+
+.tariff-highlight-price {
+    margin: 0;
+    padding: 18px 22px;
+    border-radius: 999px;
+    background: var(--site-red);
+    color: var(--text-light);
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+    font-size: clamp(2.4rem, 4vw, 4rem);
+    line-height: 0.9;
+}
+
+.tariff-highlight-price-featured {
+    background: #5f646c;
+}
+
+.tariff-highlight-price span,
+.tariff-highlight-price small {
+    font-size: 0.52em;
+}
+
+.tariff-highlight-list {
+    display: grid;
+    gap: 16px;
+    list-style: none;
+    margin: 0;
+    padding: 6px 0 0;
+    text-align: left;
+}
+
+.tariff-highlight-list li {
+    position: relative;
+    padding-left: 40px;
+    font-size: 1rem;
+}
+
+.tariff-highlight-list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.32em;
+    width: 20px;
+    height: 20px;
+    border: 5px solid var(--site-red);
+    border-radius: 999px;
+    background: var(--site-white);
+    box-sizing: border-box;
+}
+
+.tariff-table-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.tariff-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tariff-table tr + tr {
+    border-top: 2px solid rgba(17, 17, 17, 0.16);
+}
+
+.tariff-table th,
+.tariff-table td {
+    padding: 12px 8px;
+    text-align: left;
+}
+
+.tariff-table th {
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+    letter-spacing: 0.03em;
+}
+
+.tariff-footnote {
+    color: var(--text-light);
 }
 
 .class-info,
@@ -1195,7 +1432,8 @@ section h2 {
     .news-channel-grid,
     .home-story .story-grid,
     .discover-row,
-    .class-card-large {
+    .class-card-large,
+    .tariff-detail-grid {
         grid-template-columns: 1fr;
     }
 }
@@ -1224,7 +1462,8 @@ section h2 {
     .updates-grid,
     .preise-grid,
     .trainer-grid,
-    .news-grid {
+    .news-grid,
+    .tariff-table-grid {
         grid-template-columns: 1fr;
     }
 

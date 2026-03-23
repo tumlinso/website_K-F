@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Preise Probemonat - FC Puchheim e.V. Fitness-Studio{% endblock %}
+
+{% block content %}
+<section class="preise-hero">
+    <div class="preise-hero-inner">
+        <h1>Preise - Probemonat</h1>
+        <p>FC Puchheim e.V. Fitness-Studio</p>
+    </div>
+</section>
+
+<section class="tariff-detail-page">
+    <div class="container tariff-detail-grid">
+        <div class="tariff-detail-copy">
+            <article class="tariff-info-card">
+                <h2>Warum ein Probemonat?</h2>
+                <p>Der Probemonat ist ideal, wenn du unser Studio, die Geräte und die Trainingsatmosphäre erst einmal kennenlernen möchtest. Du kannst ohne langfristige Bindung testen, ob unser Training zu dir passt.</p>
+            </article>
+
+            <article class="tariff-info-card">
+                <h2>Leistungen</h2>
+                <p>Du erhältst ein Erstgespräch, einen Eingangstest, einen individuellen Trainingsplan und die Einführung in die wichtigsten Übungen mit einem Trainer. So startest du strukturiert und sicher.</p>
+            </article>
+        </div>
+
+        <article class="tariff-highlight-card">
+            <h3>Probemonat</h3>
+            <p class="tariff-highlight-subtitle">Teste, ob der Sport das Richtige für dich ist: einen Monat lang ohne automatische Verlängerung.</p>
+            <p class="tariff-highlight-price">
+                <span>€</span>
+                29,-
+            </p>
+            <ul class="tariff-highlight-list">
+                <li>Erstgespräch und Eingangstest</li>
+                <li>Individueller Trainingsplan und Beratung</li>
+                <li>Einführung in die Übungen mit Trainer</li>
+                <li>Sichtbare Fortschritte in 4 Wochen</li>
+                <li>Für Mitglieder des FC Puchheim kostenlos</li>
+            </ul>
+            <a href="{% url 'contact' %}" class="btn btn-secondary btn-large">Jetzt anfragen</a>
+        </article>
+    </div>
+</section>
+{% endblock %}

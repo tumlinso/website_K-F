@@ -26,6 +26,21 @@ def memberships(request):
     return render(request, 'gym_app/memberships.html', context)
 
 
+def probemonat(request):
+    """Probemonat detail page"""
+    return render(request, 'gym_app/probemonat.html')
+
+
+def mitgliedschaft(request):
+    """Mitgliedschaft detail page"""
+    return render(request, 'gym_app/mitgliedschaft.html')
+
+
+def monatskarte(request):
+    """Monatskarte detail page"""
+    return render(request, 'gym_app/monatskarte.html')
+
+
 def classes(request):
     """Classes page"""
     classes = Class.objects.all()

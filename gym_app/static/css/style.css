@@ -235,20 +235,59 @@ section h2 {
 }
 
 .live-status {
+    position: relative;
+    z-index: 5;
+    margin-top: -22px;
     background: linear-gradient(90deg, rgba(17, 17, 17, 0.94), rgba(102, 107, 115, 0.9));
     color: var(--text-light);
 }
 
+.live-status-intro {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.live-status-kicker {
+    display: inline-block;
+    width: fit-content;
+    padding: 7px 12px;
+    border: var(--line);
+    border-radius: 999px;
+    box-shadow: var(--shadow);
+    background: var(--site-red);
+    color: var(--text-light);
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+    font-size: 0.95rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.live-status-intro h2 {
+    display: block;
+    width: fit-content;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    color: var(--text-light);
+    font-size: clamp(2rem, 3vw, 3.2rem);
+    line-height: 0.98;
+}
+
 .live-status-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
     gap: 16px;
 }
 
 .live-status-card {
     display: grid;
-    gap: 8px;
-    padding: 18px;
+    align-content: start;
+    gap: 10px;
+    min-height: 200px;
+    padding: 24px;
     border: var(--line);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow);
@@ -257,15 +296,15 @@ section h2 {
 }
 
 .live-status-card.is-open {
-    background: #b8e6af;
+    background: linear-gradient(135deg, #d5f5ce, #b8e6af);
 }
 
 .live-status-card.is-closed {
-    background: #efb3b3;
+    background: linear-gradient(135deg, #f7c7c7, #efb3b3);
 }
 
 .live-status-card-trainer {
-    background: var(--site-grey-100);
+    background: linear-gradient(135deg, #ececef, #d9dbe0);
 }
 
 .live-status-label {
@@ -285,9 +324,14 @@ section h2 {
 
 .live-status-card strong {
     font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
-    font-size: clamp(1.45rem, 2vw, 2.1rem);
+    font-size: clamp(2rem, 3vw, 3rem);
     letter-spacing: 0.03em;
-    line-height: 1;
+    line-height: 0.95;
+}
+
+.live-status-card p:last-child {
+    max-width: 34ch;
+    font-size: 1.05rem;
 }
 
 .discover-hero {
@@ -684,7 +728,11 @@ section h2 {
 .showcase-column {
     display: grid;
     gap: 16px;
-    background: var(--site-grey-800);
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
 }
 
 .showcase-column .section-heading h2 {

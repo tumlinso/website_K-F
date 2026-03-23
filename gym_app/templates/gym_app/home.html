@@ -34,18 +34,23 @@
 </section>
 
 <section class="live-status">
-    <div class="container live-status-grid">
-        <article class="live-status-card {% if live_status.is_open %}is-open{% else %}is-closed{% endif %}">
-            <p class="live-status-label">Studio</p>
-            <strong>{{ live_status.status_label }}</strong>
-            <p>{{ live_status.status_detail }}</p>
-        </article>
+    <div class="container collapsible-section">
+        <div class="live-status-intro">
+            <button type="button" class="collapsible-trigger" aria-expanded="true" aria-controls="live-status-content">Wer ist gerade da und haben wir offen?</button>
+        </div>
+        <div class="live-status-grid collapsible-content" id="live-status-content">
+            <article class="live-status-card {% if live_status.is_open %}is-open{% else %}is-closed{% endif %}">
+                <p class="live-status-label">Studio</p>
+                <strong>{{ live_status.status_label }}</strong>
+                <p>{{ live_status.status_detail }}</p>
+            </article>
 
-        <article class="live-status-card live-status-card-trainer">
-            <p class="live-status-label">Trainer aktuell</p>
-            <strong>{{ live_status.trainer_name }}</strong>
-            <p>{{ live_status.trainer_detail }}</p>
-        </article>
+            <article class="live-status-card live-status-card-trainer">
+                <p class="live-status-label">Trainer aktuell</p>
+                <strong>{{ live_status.trainer_name }}</strong>
+                <p>{{ live_status.trainer_detail }}</p>
+            </article>
+        </div>
     </div>
 </section>
 
@@ -75,8 +80,8 @@
 <section class="home-story">
     <div class="container collapsible-section">
         <div class="story-heading-row">
-            <p class="story-kicker">Seit 1997</p>
             <button type="button" class="collapsible-trigger" aria-expanded="true" aria-controls="home-story-history-content">Fitness seit uber 25 Jahren</button>
+            <p class="story-kicker">Seit 1997</p>
         </div>
         <div class="story-grid collapsible-content" id="home-story-history-content">
             <div class="story-photo photo-one" aria-label="Trainingsflaeche"></div>
@@ -90,8 +95,8 @@
 <section class="home-story">
     <div class="container collapsible-section">
         <div class="story-heading-row">
-            <p class="story-kicker">Fur alle Leistungsstufen</p>
             <button type="button" class="collapsible-trigger" aria-expanded="true" aria-controls="home-story-approach-content">Fitness fur jeden Anspruch</button>
+            <p class="story-kicker">Fur alle Leistungsstufen</p>
         </div>
         <div class="story-grid reverse collapsible-content" id="home-story-approach-content">
             <div class="story-photo photo-two" aria-label="Krafttraining"></div>
@@ -144,23 +149,19 @@
 
 <section class="home-showcase">
     <div class="container">
-        <div class="showcase-grid">
-            <div class="showcase-column">
-                <div class="section-heading">
-                    <button type="button" class="collapsible-trigger" aria-expanded="true" aria-controls="home-memberships-content">Unsere Mitgliedschaften</button>
-                    <a href="{% url 'memberships' %}" class="btn btn-primary">Alle Tarife</a>
-                </div>
-                <div class="memberships-grid collapsible-content" id="home-memberships-content">
-                    {% for membership in memberships|slice:":3" %}
-                    <div class="membership-card">
-                        <h3>{{ membership.name }}</h3>
-                        <p class="price">€{{ membership.price }}/{{ membership.frequency }}</p>
-                        <p>{{ membership.description|truncatewords:15 }}</p>
-                        <a href="{% url 'memberships' %}" class="btn btn-secondary">Mehr erfahren</a>
-                    </div>
-                    {% endfor %}
-                </div>
+        <div class="section-heading">
+            <button type="button" class="collapsible-trigger" aria-expanded="true" aria-controls="home-memberships-content">Unsere Mitgliedschaften</button>
+            <a href="{% url 'memberships' %}" class="btn btn-primary">Alle Tarife</a>
+        </div>
+        <div class="memberships-grid collapsible-content" id="home-memberships-content">
+            {% for membership in memberships|slice:":3" %}
+            <div class="membership-card">
+                <h3>{{ membership.name }}</h3>
+                <p class="price">€{{ membership.price }}/{{ membership.frequency }}</p>
+                <p>{{ membership.description|truncatewords:15 }}</p>
+                <a href="{% url 'memberships' %}" class="btn btn-secondary">Mehr erfahren</a>
             </div>
+            {% endfor %}
         </div>
     </div>
 </section>

@@ -78,14 +78,21 @@ def _build_trainer_status(current_time: datetime) -> dict[str, str]:
             "trainer_detail": "Google-Kalender-ICS-URL hinterlegen, damit hier der aktuelle Trainer live erscheint.",
         }
 
-    current_event = _get_current_calendar_event(current_time)
+    calendar_snapshot = _get_calendar_snapshot()
+    if calendar_snapshot["state"] == "offline":
+        return {
+            "trainer_name": "Kalender macht gerade Satzpause",
+            "trainer_detail": "Der Kalender-Server ist gerade nicht erreichbar. Wahrscheinlich dehnt er noch oder sucht das WLAN im Umkleideraum.",
+        }
+
+    current_event = _get_current_calendar_event(current_time, calendar_snapshot["events"])
     if current_event:
         return {
             "trainer_name": _clean_event_summary(current_event["summary"]),
             "trainer_detail": f"Im Kalender bis {current_event['end'].strftime('%H:%M')} Uhr eingetragen.",
         }
 
-    next_event = _get_next_calendar_event(current_time)
+    next_event = _get_next_calendar_event(current_time, calendar_snapshot["events"])
     if next_event:
         return {
             "trainer_name": "Aktuell kein Trainertermin",
@@ -132,9 +139,12 @@ def _format_next_event_text(current_time: datetime, event: dict[str, object]) ->
     return f"Nächster Eintrag {weekday_name} ab {event_start.strftime('%H:%M')} Uhr: {_clean_event_summary(event['summary'])}"
 
 
-def _get_current_calendar_event(current_time: datetime) -> dict[str, object] | None:
+def _get_current_calendar_event(
+    current_time: datetime,
+    events: list[dict[str, object]],
+) -> dict[str, object] | None:
     active_events = []
-    for event in _get_calendar_events():
+    for event in events:
         current_occurrence = _get_current_occurrence(event, current_time)
         if current_occurrence:
             active_events.append(current_occurrence)
@@ -144,9 +154,12 @@ def _get_current_calendar_event(current_time: datetime) -> dict[str, object] | N
     return min(active_events, key=lambda item: item["end"])
 
 
-def _get_next_calendar_event(current_time: datetime) -> dict[str, object] | None:
+def _get_next_calendar_event(
+    current_time: datetime,
+    events: list[dict[str, object]],
+) -> dict[str, object] | None:
     next_events = []
-    for event in _get_calendar_events():
+    for event in events:
         next_occurrence = _get_next_occurrence(event, current_time)
         if next_occurrence:
             next_events.append(next_occurrence)
@@ -156,15 +169,15 @@ def _get_next_calendar_event(current_time: datetime) -> dict[str, object] | None
     return min(next_events, key=lambda item: item["start"])
 
 
-def _get_calendar_events() -> list[dict[str, object]]:
-    cache_key = "gym_app_live_status_calendar_events"
-    cached_events = cache.get(cache_key)
-    if cached_events is not None:
-        return cached_events
+def _get_calendar_snapshot() -> dict[str, object]:
+    cache_key = "gym_app_live_status_calendar_snapshot"
+    cached_snapshot = cache.get(cache_key)
+    if cached_snapshot is not None:
+        return cached_snapshot
 
     calendar_url = settings.TRAINER_CALENDAR_ICS_URL
     if not calendar_url:
-        return []
+        return {"state": "unconfigured", "events": []}
 
     request = Request(
         calendar_url,
@@ -175,17 +188,20 @@ def _get_calendar_events() -> list[dict[str, object]]:
         with urlopen(request, timeout=settings.TRAINER_CALENDAR_TIMEOUT_SECONDS) as response:
             calendar_text = response.read().decode("utf-8")
     except (URLError, TimeoutError, ValueError):
-        cache.set(cache_key, [], settings.LIVE_STATUS_CACHE_SECONDS)
-        return []
+        snapshot = {"state": "offline", "events": []}
+        cache.set(cache_key, snapshot, settings.LIVE_STATUS_CACHE_SECONDS)
+        return snapshot
 
     try:
         events = _parse_ics_events(calendar_text, ZoneInfo(settings.GYM_TIMEZONE))
     except (ValueError, KeyError):
-        cache.set(cache_key, [], settings.LIVE_STATUS_CACHE_SECONDS)
-        return []
+        snapshot = {"state": "offline", "events": []}
+        cache.set(cache_key, snapshot, settings.LIVE_STATUS_CACHE_SECONDS)
+        return snapshot
 
-    cache.set(cache_key, events, settings.LIVE_STATUS_CACHE_SECONDS)
-    return events
+    snapshot = {"state": "ok", "events": events}
+    cache.set(cache_key, snapshot, settings.LIVE_STATUS_CACHE_SECONDS)
+    return snapshot
 
 
 def _parse_ics_events(calendar_text: str, default_timezone: ZoneInfo) -> list[dict[str, object]]:

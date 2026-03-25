@@ -240,16 +240,15 @@ section h2 {
 }
 
 .live-status {
-    position: relative;
-    z-index: 5;
-    margin-top: 10px;
     background: linear-gradient(90deg, rgba(17, 17, 17, 0.94), rgba(102, 107, 115, 0.9));
     color: var(--text-light);
 }
 
+.hero + .live-status {
+}
+
 .live-status-intro {
     display: grid;
-    gap: 10px;
     margin-bottom: 18px;
 }
 

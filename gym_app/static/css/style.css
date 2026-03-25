@@ -239,17 +239,23 @@ section h2 {
     background-image: linear-gradient(90deg, rgba(0, 0, 0, 0.72), rgba(195, 13, 20, 0.28)), var(--img-hero);
 }
 
+.hero + .home-hero-spacer {
+    width: var(--page-width);
+    margin: 0 auto;
+}
+
 .live-status {
     background: linear-gradient(90deg, rgba(17, 17, 17, 0.94), rgba(102, 107, 115, 0.9));
     color: var(--text-light);
 }
 
 .hero + .live-status {
+    margin-top: 0;
 }
 
 .live-status-intro {
     display: grid;
-    margin-bottom: 18px;
+    margin-bottom: 10px;
 }
 
 .live-status-kicker {
@@ -986,6 +992,14 @@ section h2 {
     height: 7px;
     border-radius: 999px;
     background: var(--site-red);
+}
+
+.preis-card.highlight li::before {
+    background: var(--site-white);
+}
+
+.preis-card .btn {
+    margin-top: 10px;
 }
 
 .classes-list {
@@ -1761,6 +1775,17 @@ section h2 {
 
 .preis-card.highlight .preis-amount {
     color: var(--text-light);
+}
+
+.preis-card.highlight li {
+    padding-left: 20px;
+}
+
+.preis-card.highlight li::before {
+    width: 10px;
+    height: 10px;
+    top: 0.55em;
+    background: var(--site-white);
 }
 
 .preis-sub {

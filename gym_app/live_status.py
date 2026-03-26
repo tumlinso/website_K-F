@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime, time, timedelta, timezone
+import re
 from urllib.error import URLError
 from urllib.request import Request, urlopen
 from zoneinfo import ZoneInfo
@@ -346,7 +347,8 @@ def _get_current_occurrence(event: dict[str, object], current_time: datetime) ->
             }
         return None
 
-    rule = rrulestr(str(event["rrule"]), dtstart=event["start"])
+    normalized_rrule = _normalize_rrule_for_dateutil(str(event["rrule"]), event["start"])
+    rule = rrulestr(normalized_rrule, dtstart=event["start"])
     occurrence_start = rule.before(current_time, inc=True)
     if occurrence_start is None:
         return None
@@ -375,7 +377,8 @@ def _get_next_occurrence(event: dict[str, object], current_time: datetime) -> di
             }
         return None
 
-    rule = rrulestr(str(event["rrule"]), dtstart=event["start"])
+    normalized_rrule = _normalize_rrule_for_dateutil(str(event["rrule"]), event["start"])
+    rule = rrulestr(normalized_rrule, dtstart=event["start"])
     occurrence_start = rule.after(current_time, inc=False)
     attempts = 0
 
@@ -397,6 +400,41 @@ def _ensure_timezone(value: datetime, tzinfo) -> datetime:
     if value.tzinfo is not None:
         return value
     return value.replace(tzinfo=tzinfo)
+
+
+def _normalize_rrule_for_dateutil(rrule_value: str, dtstart: datetime) -> str:
+    if dtstart.tzinfo is None:
+        return rrule_value
+
+    match = re.search(r"UNTIL=([^;]+)", rrule_value)
+    if not match:
+        return rrule_value
+
+    until_value = match.group(1)
+    if until_value.endswith("Z"):
+        return rrule_value
+
+    local_until = _parse_rrule_until_value(until_value, dtstart.tzinfo)
+    utc_until = local_until.astimezone(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    return rrule_value.replace(f"UNTIL={until_value}", f"UNTIL={utc_until}", 1)
+
+
+def _parse_rrule_until_value(until_value: str, tzinfo) -> datetime:
+    if len(until_value) == 8:
+        return datetime.strptime(until_value, "%Y%m%d").replace(
+            hour=23,
+            minute=59,
+            second=59,
+            tzinfo=tzinfo,
+        )
+
+    for fmt in ("%Y%m%dT%H%M%S", "%Y%m%dT%H%M"):
+        try:
+            return datetime.strptime(until_value, fmt).replace(tzinfo=tzinfo)
+        except ValueError:
+            continue
+
+    raise ValueError(f"Unsupported RRULE UNTIL value: {until_value}")
 
 
 def _is_excluded(candidate_start: datetime, excluded_starts: list[datetime]) -> bool:

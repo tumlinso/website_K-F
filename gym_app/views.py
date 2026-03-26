@@ -5,6 +5,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from .models import Membership, Class, Contact, NewsPost
 from .live_status import get_home_live_status
+from .trainer_calendar import get_trainer_calendar_days
 
 
 def home(request):
@@ -107,7 +108,10 @@ def entdecken(request):
 
 def oeffnungszeiten(request):
     """Opening hours page"""
-    return render(request, 'gym_app/oeffnungszeiten.html')
+    context = {
+        'trainer_calendar_days': get_trainer_calendar_days(),
+    }
+    return render(request, 'gym_app/oeffnungszeiten.html', context)
 
 
 def preise(request):

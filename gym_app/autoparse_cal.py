@@ -9,6 +9,7 @@ import requests
 BASE_DIR = Path(__file__).resolve().parents[1]
 ics_address_webcal = "https://calendar.google.com/calendar/ical/fcpabteilung16%40gmail.com/public/basic.ics"
 internal_ics_path = BASE_DIR / "gym_app" / "static" / "ics" / "calendar.ics"
+processed_csv_path = BASE_DIR / "gym_app" / "static" / "ics" / "processed_calendar.csv"
 
 person_map = {
     'Geöffnet - ohne Trainer': ['Geöffnet - ohne Trainer', 'geöffnet ohne Trainer', 'trainerfreie Zeit', 'n. N.', 'N.n.', 'N.N.', 'Geöffnet -ohne Trainer', 'geöffnet - ohne Trainer', 'N.N'],
@@ -155,8 +156,20 @@ def process_calendar_df(df, person_map, column_name='name'):
     df = drop_invalid(df, person_map, column_name=column_name)
     return df
 
-def save_to_csv(df, path=BASE_DIR / "gym_app" / "static" / "ics" / "processed_calendar.csv"):
+def save_to_csv(df, path=processed_csv_path):
+    path.parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(path, index=False)
+
+def load_processed_calendar_csv(path=processed_csv_path):
+    path = Path(path)
+    if not path.exists():
+        return pd.DataFrame(columns=["name", "start", "end"])
+
+    df = pd.read_csv(path, parse_dates=["start", "end"])
+    for col in ["start", "end"]:
+        df[col] = pd.to_datetime(df[col], utc=True, errors="coerce")
+    df["name"] = df["name"].fillna("").astype(str).str.strip()
+    return df
 
 def sync_calendar(
         ics_address_webcal = ics_address_webcal,
@@ -165,14 +178,13 @@ def sync_calendar(
         ):
     download_ok = download_web_calendar_ics(ics_address_webcal, internal_ics_path)
     if not download_ok and not internal_ics_path.exists():
-        raise SystemExit(
+        raise RuntimeError(
             f"Could not download the ICS feed and no local file exists at {internal_ics_path}"
         )
 
     df = parse_ics_file(internal_ics_path)
     if df.empty:
-        print("No calendar events found in the selected time range.")
-        raise SystemExit(0)
+        return df
 
     df = process_calendar_df(df, person_map)
     save_to_csv(df)

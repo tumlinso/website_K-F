@@ -2,15 +2,15 @@ from __future__ import annotations
 
 from datetime import datetime, time, timedelta, timezone
 import re
-from urllib.error import URLError
-from urllib.request import Request, urlopen
 from zoneinfo import ZoneInfo
 
 from dateutil.rrule import rrulestr
 from django.conf import settings
 from django.core.cache import cache
 
+from .autoparse_cal import load_processed_calendar_csv, sync_calendar
 from .trainer_profiles import get_trainer_display_name, get_trainer_palette
+from .trainer_profiles import is_trainer_free
 
 
 OPENING_HOURS = {
@@ -84,18 +84,11 @@ def _build_open_status(current_time: datetime) -> dict[str, object]:
 
 
 def _build_trainer_status(current_time: datetime) -> dict[str, str]:
-    calendar_url = settings.TRAINER_CALENDAR_ICS_URL
-    if not calendar_url:
-        return _build_trainer_card_payload(
-            "Geoeffnet - ohne Trainer",
-            "Google-Kalender-ICS-URL hinterlegen, damit hier der aktuelle Trainer live erscheint.",
-        )
-
     calendar_snapshot = _get_calendar_snapshot()
     if calendar_snapshot["state"] == "offline":
         return _build_trainer_card_payload(
             "Geoeffnet - ohne Trainer",
-            "Der Kalender-Server ist gerade nicht erreichbar. Wahrscheinlich dehnt er noch oder sucht das WLAN im Umkleideraum.",
+            "Die Kalenderdaten konnten gerade nicht geladen werden. Sobald sie wieder verfuegbar sind, erscheint hier der aktuelle Trainer.",
         )
 
     current_event = _get_current_calendar_event(current_time, calendar_snapshot["events"])
@@ -189,33 +182,56 @@ def _get_calendar_snapshot() -> dict[str, object]:
     if cached_snapshot is not None:
         return cached_snapshot
 
-    calendar_url = settings.TRAINER_CALENDAR_ICS_URL
-    if not calendar_url:
-        return {"state": "unconfigured", "events": []}
-
-    request = Request(
-        calendar_url,
-        headers={"User-Agent": "KPlusFFitnessstudio/1.0"},
-    )
-
-    try:
-        with urlopen(request, timeout=settings.TRAINER_CALENDAR_TIMEOUT_SECONDS) as response:
-            calendar_text = response.read().decode("utf-8")
-    except (URLError, TimeoutError, ValueError):
-        snapshot = {"state": "offline", "events": []}
-        cache.set(cache_key, snapshot, settings.LIVE_STATUS_CACHE_SECONDS)
-        return snapshot
-
-    try:
-        events = _parse_ics_events(calendar_text, ZoneInfo(settings.GYM_TIMEZONE))
-    except (ValueError, KeyError):
-        snapshot = {"state": "offline", "events": []}
-        cache.set(cache_key, snapshot, settings.LIVE_STATUS_CACHE_SECONDS)
-        return snapshot
-
-    snapshot = {"state": "ok", "events": events}
+    snapshot = _get_dataframe_calendar_snapshot()
     cache.set(cache_key, snapshot, settings.LIVE_STATUS_CACHE_SECONDS)
     return snapshot
+
+
+def _load_calendar_df():
+    try:
+        return sync_calendar()
+    except Exception:
+        return load_processed_calendar_csv()
+
+
+def _get_dataframe_calendar_snapshot() -> dict[str, object]:
+    try:
+        df = _load_calendar_df()
+    except Exception:
+        return {"state": "offline", "events": []}
+
+    if df.empty:
+        return {"state": "ok", "events": []}
+
+    try:
+        gym_timezone = ZoneInfo(settings.GYM_TIMEZONE)
+        df = df.dropna(subset=["start", "end"]).sort_values("start")
+        events = []
+
+        for row in df.itertuples(index=False):
+            trainer_name = str(row.name).strip()
+            if is_trainer_free(trainer_name):
+                continue
+
+            start = row.start.to_pydatetime().astimezone(gym_timezone)
+            end = row.end.to_pydatetime().astimezone(gym_timezone)
+            if end <= start:
+                continue
+
+            events.append(
+                {
+                    "summary": trainer_name,
+                    "start": start,
+                    "end": end,
+                    "duration": end - start,
+                    "rrule": None,
+                    "exdates": [],
+                }
+            )
+    except (AttributeError, KeyError, TypeError, ValueError):
+        return {"state": "offline", "events": []}
+
+    return {"state": "ok", "events": events}
 
 
 def _parse_ics_events(calendar_text: str, default_timezone: ZoneInfo) -> list[dict[str, object]]:

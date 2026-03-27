@@ -9,6 +9,7 @@ from django.core.cache import cache
 from django.utils import timezone
 
 from .autoparse_cal import load_processed_calendar_csv, sync_calendar
+from .live_status import OPENING_HOURS
 from .trainer_profiles import (
     get_trainer_display_name,
     get_trainer_palette,
@@ -35,6 +36,30 @@ WEEKDAY_NAMES = {
 
 def _minutes_since_calendar_start(hour: int, minute: int) -> int:
     return (hour * 60 + minute) - (CALENDAR_DAY_START_HOUR * 60)
+
+
+def _build_opening_hours_payload(event_date) -> dict[str, object] | None:
+    hours = OPENING_HOURS.get(event_date.weekday())
+    if not hours:
+        return None
+
+    opens_at, closes_at = hours
+    start_minutes = max(0, _minutes_since_calendar_start(opens_at.hour, opens_at.minute))
+    end_minutes = min(
+        CALENDAR_DAY_TOTAL_MINUTES,
+        _minutes_since_calendar_start(closes_at.hour, closes_at.minute),
+    )
+    duration_minutes = max(0, end_minutes - start_minutes)
+
+    if duration_minutes <= 0:
+        return None
+
+    return {
+        "opens_label": opens_at.strftime("%H:%M"),
+        "closes_label": closes_at.strftime("%H:%M"),
+        "top_percent": round((start_minutes / CALENDAR_DAY_TOTAL_MINUTES) * 100, 3),
+        "height_percent": round((duration_minutes / CALENDAR_DAY_TOTAL_MINUTES) * 100, 3),
+    }
 
 
 def get_trainer_calendar_time_markers() -> list[dict[str, object]]:
@@ -85,6 +110,9 @@ def get_trainer_calendar_days(limit_days: int = 10) -> list[dict[str, object]]:
             continue
 
         trainer_name = str(row.name).strip()
+        if is_trainer_free(trainer_name):
+            continue
+
         palette = get_trainer_palette(trainer_name)
 
         start_minutes = max(0, _minutes_since_calendar_start(start.hour, start.minute))
@@ -102,21 +130,22 @@ def get_trainer_calendar_days(limit_days: int = 10) -> list[dict[str, object]]:
                 "end_iso": end.isoformat(),
                 "accent": palette["accent"],
                 "text": palette["text"],
-                "is_trainer_free": is_trainer_free(trainer_name),
                 "top_percent": round((start_minutes / CALENDAR_DAY_TOTAL_MINUTES) * 100, 3),
                 "height_percent": round((duration_minutes / CALENDAR_DAY_TOTAL_MINUTES) * 100, 3),
             }
         )
 
     days = []
-    for event_date in sorted(grouped_events.keys()):
+    for day_offset in range(limit_days):
+        event_date = (window_start + timedelta(days=day_offset)).date()
         days.append(
             {
                 "iso_date": event_date.isoformat(),
                 "weekday": WEEKDAY_NAMES[event_date.weekday()],
                 "date_label": event_date.strftime("%d.%m.%Y"),
                 "is_today": event_date == now.date(),
-                "events": grouped_events[event_date],
+                "events": grouped_events.get(event_date, []),
+                "opening_hours": _build_opening_hours_payload(event_date),
             }
         )
 

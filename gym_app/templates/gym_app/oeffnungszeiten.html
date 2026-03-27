@@ -62,9 +62,19 @@
                                     <h3>{{ day.date_label }}</h3>
                                 </div>
                                 <div class="trainer-calendar-track">
+                                    {% if day.opening_hours %}
+                                        <div
+                                            class="trainer-calendar-hours-window"
+                                            style="--hours-top: {{ day.opening_hours.top_percent }}%; --hours-height: {{ day.opening_hours.height_percent }}%;"
+                                            aria-hidden="true"
+                                        >
+                                            <span class="trainer-calendar-hours-label trainer-calendar-hours-open">{{ day.opening_hours.opens_label }}</span>
+                                            <span class="trainer-calendar-hours-label trainer-calendar-hours-close">{{ day.opening_hours.closes_label }}</span>
+                                        </div>
+                                    {% endif %}
                                     {% for event in day.events %}
                                         <article
-                                            class="trainer-calendar-event {% if event.is_trainer_free %}trainer-calendar-event-free{% endif %}"
+                                            class="trainer-calendar-event"
                                             style="--trainer-accent: {{ event.accent }}; --trainer-text: {{ event.text }}; --event-top: {{ event.top_percent }}%; --event-height: {{ event.height_percent }}%;"
                                         >
                                             <p class="trainer-calendar-time">{{ event.time_label }}</p>

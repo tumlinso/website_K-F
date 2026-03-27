@@ -47,10 +47,7 @@ BRIGHT_FALLBACK_COLORS = [
 TRAINER_COLOR_OVERRIDES = {
     NO_TRAINER_LABEL: "#9ca3af",
     "Felix Blumenschein": "#ff6f61",
-    "Richard Leger": "#6ee7b7",
     "Gavin Tumlinson": "#ffe34d",
-    "Xander Tumlinson": "#2e8b57",
-    "Korbinian Biermeier": "#ff4fa3",
 }
 
 _CANONICAL_NAMES = list(person_map.keys())

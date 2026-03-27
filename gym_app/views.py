@@ -16,10 +16,8 @@ logger = logging.getLogger(__name__)
 
 def home(request):
     """Home page"""
-    memberships = Membership.objects.filter(is_active=True)
     recent_posts = NewsPost.objects.filter(is_published=True)[:2]
     context = {
-        'memberships': memberships,
         'recent_posts': recent_posts,
         'live_status': get_home_live_status(),
     }

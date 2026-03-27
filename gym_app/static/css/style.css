@@ -908,7 +908,10 @@ section h2 {
 
 .home-membership-card-compact .home-membership-btn {
     width: auto;
-    min-width: 180px;
+    min-width: 220px;
+    padding: 16px 24px;
+    font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+    line-height: 1;
 }
 
 .cta {

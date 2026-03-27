@@ -892,6 +892,25 @@ section h2 {
     justify-self: center;
 }
 
+.home-membership-card-compact {
+    gap: 14px;
+    padding: 24px 20px;
+}
+
+.home-membership-card-compact h3 {
+    font-size: clamp(1.5rem, 2.1vw, 2rem);
+}
+
+.home-membership-card-compact .home-membership-sub {
+    min-height: 0;
+    margin: 0;
+}
+
+.home-membership-card-compact .home-membership-btn {
+    width: auto;
+    min-width: 180px;
+}
+
 .cta {
     background-image: linear-gradient(90deg, rgba(0, 0, 0, 0.78), rgba(195, 13, 20, 0.42)), var(--img-night);
     background-size: cover;

@@ -15,7 +15,7 @@
         <button type="button" class="collapsible-trigger" aria-expanded="true" aria-controls="preise-content">Unsere Tarife</button>
         <div class="collapsible-content" id="preise-content">
             <div class="preise-grid">
-                <article class="preis-card">
+                <article class="preis-card" id="probemonat">
                     <h3>Probemonat</h3>
                     <p class="preis-sub">Teste, ob der Sport das Richtige fur dich ist: einen Monat ohne automatische Verlangerung.</p>
                     <p class="preis-amount"><span>EUR</span> 29,-</p>
@@ -30,7 +30,7 @@
                     <a href="{% url 'probemonat' %}" class="btn btn-primary">Mehr erfahren</a>
                 </article>
 
-                <article class="preis-card highlight">
+                <article class="preis-card highlight" id="mitgliedschaft">
                     <h3>Mitgliedschaft</h3>
                     <p class="preis-sub">Werde Mitglied in der Abteilung Kraft und Fitness des FC Puchheim.</p>
                     <p class="preis-amount"><span>EUR</span> 35,- <small>/ Monat*</small></p>
@@ -45,7 +45,7 @@
                     <a href="{% url 'mitgliedschaft' %}" class="btn btn-primary">Mehr erfahren</a>
                 </article>
 
-                <article class="preis-card">
+                <article class="preis-card" id="monatskarte">
                     <h3>Monatskarte</h3>
                     <p class="preis-sub">Bleibe flexibel mit 1- oder 3-Monatskarte fur kurzere Trainingsphasen.</p>
                     <p class="preis-amount"><span>ab EUR</span> 49,- <small>/ Monat*</small></p>

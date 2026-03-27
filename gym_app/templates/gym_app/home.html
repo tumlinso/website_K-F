@@ -157,36 +157,19 @@
             <a href="{% url 'preise' %}" class="btn btn-primary">Alle Tarife</a>
         </div>
         <div class="home-memberships-grid collapsible-content" id="home-memberships-content">
-            <article class="home-membership-card">
+            <article class="home-membership-card home-membership-card-compact">
                 <h3>Probemonat</h3>
-                <p class="home-membership-sub">Teste, ob der Sport das Richtige fuer dich ist. Ein Monat ohne automatische Verlaengerung.</p>
-                <p class="home-membership-price">
-                    <span class="home-membership-price-prefix">EUR</span>
-                    29,-
-                </p>
-                <a href="{% url 'probemonat' %}" class="btn btn-secondary home-membership-btn">Mehr erfahren</a>
+                <a href="{% url 'preise' %}#probemonat" class="btn btn-secondary home-membership-btn">EUR 29,-</a>
             </article>
 
-            <article class="home-membership-card home-membership-card-featured">
+            <article class="home-membership-card home-membership-card-compact home-membership-card-featured">
                 <h3>Mitgliedschaft</h3>
-                <p class="home-membership-sub">Werde Mitglied in der Abteilung Kraft und Fitness des FC Puchheim.</p>
-                <p class="home-membership-price">
-                    <span class="home-membership-price-prefix">EUR</span>
-                    35,-
-                    <small>/ Monat*</small>
-                </p>
-                <a href="{% url 'mitgliedschaft' %}" class="btn btn-primary home-membership-btn">Mehr erfahren</a>
+                <a href="{% url 'preise' %}#mitgliedschaft" class="btn btn-primary home-membership-btn">EUR 35,- / Monat*</a>
             </article>
 
-            <article class="home-membership-card">
+            <article class="home-membership-card home-membership-card-compact">
                 <h3>Monatskarte</h3>
-                <p class="home-membership-sub">Bleibe flexibel mit 1- oder 3-Monatskarte fuer kuerzere Trainingsphasen.</p>
-                <p class="home-membership-price">
-                    <span class="home-membership-price-prefix">ab EUR</span>
-                    49,-
-                    <small>/ Monat*</small>
-                </p>
-                <a href="{% url 'monatskarte' %}" class="btn btn-secondary home-membership-btn">Mehr erfahren</a>
+                <a href="{% url 'preise' %}#monatskarte" class="btn btn-secondary home-membership-btn">ab EUR 49,- / Monat*</a>
             </article>
         </div>
         <br>

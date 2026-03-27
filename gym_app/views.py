@@ -1,11 +1,17 @@
+import logging
+
+from django.conf import settings
+from django.contrib import messages
+from django.core.mail import EmailMessage
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_http_methods
-from django.contrib import messages
-from django.core.mail import send_mail
-from django.conf import settings
-from .models import Membership, Class, Contact, NewsPost
+
+from .forms import ContactForm
 from .live_status import get_home_live_status
+from .models import Membership, Class, NewsPost
 from .trainer_calendar import get_trainer_calendar_days, get_trainer_calendar_time_markers
+
+logger = logging.getLogger(__name__)
 
 
 def home(request):
@@ -52,48 +58,57 @@ def classes(request):
 @require_http_methods(["GET", "POST"])
 def contact(request):
     """Contact page with form submission"""
+    form = ContactForm(request.POST or None)
+
     if request.method == 'POST':
-        name = request.POST.get('name')
-        email = request.POST.get('email')
-        message_text = request.POST.get('message')
-        
-        if name and email and message_text:
-            # Save contact to database
-            contact_obj = Contact.objects.create(
-                name=name,
-                email=email,
-                message=message_text
+        if form.is_valid():
+            contact_obj = form.save()
+
+            admin_message = EmailMessage(
+                subject=f'Neue Kontaktanfrage von {contact_obj.name}',
+                body=(
+                    f'Name: {contact_obj.name}\n'
+                    f'E-Mail: {contact_obj.email}\n\n'
+                    f'Nachricht:\n{contact_obj.message}'
+                ),
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                to=[settings.CONTACT_RECIPIENT_EMAIL],
+                reply_to=[contact_obj.email],
             )
-            
-            # Send email to gym admin
-            admin_email = settings.DEFAULT_FROM_EMAIL
+            confirmation_message = EmailMessage(
+                subject='Ihre Anfrage bei K+F Fitnessstudio',
+                body=(
+                    f'Hallo {contact_obj.name},\n\n'
+                    'vielen Dank fuer Ihre Anfrage. Wir haben Ihre Nachricht erhalten '
+                    'und melden uns so schnell wie moeglich bei Ihnen.\n\n'
+                    'Beste Gruesse\n'
+                    'K+F Fitnessstudio Team'
+                ),
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                to=[contact_obj.email],
+            )
+
             try:
-                send_mail(
-                    subject=f'Neue Kontaktanfrage von {name}',
-                    message=f'Name: {name}\nEmail: {email}\n\nNachricht:\n{message_text}',
-                    from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=[admin_email],
-                    fail_silently=False,
+                admin_message.send(fail_silently=False)
+                confirmation_message.send(fail_silently=False)
+                messages.success(
+                    request,
+                    'Vielen Dank! Ihre Nachricht wurde erfolgreich versendet. '
+                    'Wir werden Ihnen in Kuerze antworten.',
                 )
-                
-                # Send confirmation email to user
-                send_mail(
-                    subject='Ihre Anfrage bei K+F Fitnessstudio',
-                    message=f'Hallo {name},\n\nVielen Dank für Ihre Anfrage. Wir werden Ihre Nachricht in Kürze bearbeiten und uns mit Ihnen in Verbindung setzen.\n\nBeste Grüße\nK+F Fitnessstudio Team',
-                    from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=[email],
-                    fail_silently=False,
+            except Exception:
+                logger.exception('Failed to send contact form emails for submission %s', contact_obj.pk)
+                messages.warning(
+                    request,
+                    'Ihre Nachricht wurde gespeichert, aber die E-Mail-Zustellung ist '
+                    'fehlgeschlagen. Bitte kontaktieren Sie uns direkt per E-Mail.',
                 )
-                
-                messages.success(request, 'Vielen Dank! Ihre Nachricht wurde erfolgreich versendet. Wir werden Ihnen in Kürze antworten.')
-            except Exception as e:
-                messages.warning(request, f'Nachricht gespeichert, aber E-Mail konnte nicht versendet werden: {str(e)}')
-            
+
             return redirect('contact')
-        else:
-            messages.error(request, 'Bitte füllen Sie alle Felder aus.')
-    
-    return render(request, 'gym_app/contact.html')
+
+        messages.error(request, 'Bitte pruefen Sie die markierten Felder.')
+
+    return render(request, 'gym_app/contact.html', {'form': form})
 
 
 def about(request):

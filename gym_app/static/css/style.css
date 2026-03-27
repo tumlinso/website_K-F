@@ -1717,6 +1717,12 @@ section h2 {
     background: #ffffff;
 }
 
+.form-error {
+    margin: 6px 0 0;
+    color: #8b1e1e;
+    font-size: 0.92rem;
+}
+
 .discover-row {
     margin-top: 2px;
 }

@@ -167,6 +167,30 @@ Edit in `templates/gym_app/contact.html`:
 - Email
 - Business hours
 
+### Email Delivery For The Contact Form
+The contact form already saves submissions in the database and can send two emails:
+- one notification to the studio inbox
+- one confirmation to the visitor
+
+Local development defaults to Django's console email backend, so emails are printed in the terminal. For real delivery, create a `.env` file in the project root and configure SMTP:
+
+```bash
+DEBUG=False
+EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+EMAIL_HOST=smtp.your-provider.tld
+EMAIL_PORT=587
+EMAIL_USE_TLS=True
+EMAIL_HOST_USER=your-smtp-user
+EMAIL_HOST_PASSWORD=your-smtp-password
+DEFAULT_FROM_EMAIL=noreply@kpf-fitnessstudio.de
+CONTACT_RECIPIENT_EMAIL=info@kpf-fitnessstudio.de
+```
+
+Notes:
+- `CONTACT_RECIPIENT_EMAIL` is the inbox that receives contact form messages.
+- The admin notification sets `Reply-To` to the visitor's email address, so staff can answer directly.
+- If your provider requires SSL on port 465, set `EMAIL_USE_SSL=True` and `EMAIL_USE_TLS=False`.
+
 ### Styling
 All colors and fonts are defined in `gym_app/static/css/style.css`
 - Primary colors: Used for buttons and accents
@@ -200,6 +224,7 @@ Before deploying to production:
 4. Use a production database (PostgreSQL recommended)
 5. Collect static files: `python manage.py collectstatic`
 6. Use a production WSGI server (Gunicorn, uWSGI)
+7. Configure SMTP environment variables for the contact form
 
 ## Troubleshooting
 
@@ -216,7 +241,6 @@ Before deploying to production:
 
 - Add user authentication for member login
 - Implement payment processing
-- Add email notifications
 - Create a booking system for classes
 - Add a blog for fitness tips
 

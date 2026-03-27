@@ -43,26 +43,38 @@
         <button type="button" class="collapsible-trigger" aria-expanded="true" aria-controls="hours-planning-content">Trainer-Prasenz und Planung</button>
         <div class="hours-calendar-placeholder collapsible-content" id="hours-planning-content">
             {% if trainer_calendar_days %}
-                <div class="trainer-calendar-grid">
-                    {% for day in trainer_calendar_days %}
-                        <article class="trainer-calendar-day {% if day.is_today %}trainer-calendar-day-today{% endif %}">
-                            <div class="trainer-calendar-day-head">
-                                <p class="trainer-calendar-day-kicker">{{ day.weekday }}</p>
-                                <h3>{{ day.date_label }}</h3>
-                            </div>
-                            <div class="trainer-calendar-event-list">
-                                {% for event in day.events %}
-                                    <article
-                                        class="trainer-calendar-event {% if event.is_trainer_free %}trainer-calendar-event-free{% endif %}"
-                                        style="--trainer-accent: {{ event.accent }}; --trainer-soft: {{ event.soft }}; --trainer-text: {{ event.text }};"
-                                    >
-                                        <p class="trainer-calendar-time">{{ event.time_label }}</p>
-                                        <strong>{{ event.trainer_name }}</strong>
-                                    </article>
-                                {% endfor %}
-                            </div>
-                        </article>
-                    {% endfor %}
+                <div class="trainer-calendar-shell">
+                    <div class="trainer-calendar-time-rail" aria-hidden="true">
+                        <div class="trainer-calendar-time-rail-head"></div>
+                        <div class="trainer-calendar-time-rail-track">
+                            {% for marker in trainer_calendar_markers %}
+                                <span class="trainer-calendar-time-marker" style="--time-position: {{ marker.position_percent }}%;">
+                                    {{ marker.label }}
+                                </span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="trainer-calendar-grid">
+                        {% for day in trainer_calendar_days %}
+                            <article class="trainer-calendar-day {% if day.is_today %}trainer-calendar-day-today{% endif %}">
+                                <div class="trainer-calendar-day-head">
+                                    <p class="trainer-calendar-day-kicker">{{ day.weekday }}</p>
+                                    <h3>{{ day.date_label }}</h3>
+                                </div>
+                                <div class="trainer-calendar-track">
+                                    {% for event in day.events %}
+                                        <article
+                                            class="trainer-calendar-event {% if event.is_trainer_free %}trainer-calendar-event-free{% endif %}"
+                                            style="--trainer-accent: {{ event.accent }}; --trainer-text: {{ event.text }}; --event-top: {{ event.top_percent }}%; --event-height: {{ event.height_percent }}%;"
+                                        >
+                                            <p class="trainer-calendar-time">{{ event.time_label }}</p>
+                                            <strong>{{ event.trainer_name }}</strong>
+                                        </article>
+                                    {% endfor %}
+                                </div>
+                            </article>
+                        {% endfor %}
+                    </div>
                 </div>
             {% else %}
                 <p>Aktuell konnten keine Trainertermine aus dem Kalender geladen werden. Sobald deine geparsten Kalenderdaten verfugbar sind, erscheinen sie hier automatisch.</p>

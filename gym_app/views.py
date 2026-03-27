@@ -5,7 +5,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from .models import Membership, Class, Contact, NewsPost
 from .live_status import get_home_live_status
-from .trainer_calendar import get_trainer_calendar_days
+from .trainer_calendar import get_trainer_calendar_days, get_trainer_calendar_time_markers
 
 
 def home(request):
@@ -110,6 +110,7 @@ def oeffnungszeiten(request):
     """Opening hours page"""
     context = {
         'trainer_calendar_days': get_trainer_calendar_days(),
+        'trainer_calendar_markers': get_trainer_calendar_time_markers(),
     }
     return render(request, 'gym_app/oeffnungszeiten.html', context)
 

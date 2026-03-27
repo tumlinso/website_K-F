@@ -47,7 +47,10 @@
                 <p>{{ live_status.status_detail }}</p>
             </article>
 
-            <article class="live-status-card live-status-card-trainer">
+            <article
+                class="live-status-card live-status-card-trainer"
+                style="--trainer-accent: {{ live_status.trainer_accent }}; --trainer-text: {{ live_status.trainer_text }};"
+            >
                 <p class="live-status-label">Trainer aktuell</p>
                 <strong>{{ live_status.trainer_name }}</strong>
                 <p>{{ live_status.trainer_detail }}</p>

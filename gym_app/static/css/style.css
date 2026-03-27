@@ -28,6 +28,8 @@
     --space-stack: 18px;
     --space-flow: 14px;
     --page-width: min(1640px, calc(100% - 14px));
+    --trainer-calendar-head-height: 88px;
+    --trainer-calendar-track-height: 768px;
     --img-hero: url('/static/img/banner_color.jpg');
     --img-night: url('/static/img/gym_at_night.jpg');
     --img-floor: url('/static/img/trainingsflaeche_belichtet.jpg');
@@ -314,7 +316,13 @@ section h2 {
 }
 
 .live-status-card-trainer {
-    background: linear-gradient(135deg, #ececef, #d9dbe0);
+    background: var(--trainer-accent, #9ca3af);
+    color: var(--trainer-text, #111111);
+}
+
+.live-status-card-trainer .live-status-label {
+    background: rgba(248, 248, 248, 0.92);
+    color: var(--text);
 }
 
 .live-status-label {
@@ -1744,8 +1752,11 @@ section h2 {
 
 .trainer-calendar-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 16px;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(210px, 1fr);
+    gap: 14px;
+    overflow-x: auto;
+    padding-bottom: 6px;
 }
 
 .trainer-calendar-day {
@@ -1756,27 +1767,30 @@ section h2 {
     border: var(--line);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow);
-    background: linear-gradient(180deg, rgba(248, 248, 248, 0.96), rgba(217, 219, 224, 0.98));
+    background: #f3efe8;
+    min-width: 210px;
 }
 
 .trainer-calendar-day-today {
-    background: linear-gradient(180deg, #fff0f0, #ececef);
+    background: #fff6cf;
 }
 
 .trainer-calendar-day-head {
     display: grid;
-    gap: 8px;
+    gap: 6px;
+    min-height: var(--trainer-calendar-head-height);
+    align-content: start;
 }
 
 .trainer-calendar-day-kicker {
     display: inline-block;
     width: fit-content;
-    padding: 7px 12px;
+    padding: 6px 11px;
     border: var(--line);
     border-radius: 999px;
     box-shadow: var(--shadow);
-    background: var(--site-black);
-    color: var(--text-light);
+    background: #f8f8f8;
+    color: var(--text);
     font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
     font-size: 0.9rem;
     letter-spacing: 0.05em;
@@ -1791,38 +1805,98 @@ section h2 {
     text-transform: uppercase;
 }
 
-.trainer-calendar-event-list {
+.trainer-calendar-shell {
     display: grid;
+    grid-template-columns: 64px minmax(0, 1fr);
     gap: 12px;
+    align-items: start;
+}
+
+.trainer-calendar-time-rail {
+    position: sticky;
+    left: 0;
+    height: calc(var(--trainer-calendar-track-height) + var(--trainer-calendar-head-height));
+    background: #e3e5e8;
+    border: var(--line);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow);
+}
+
+.trainer-calendar-time-rail-head {
+    min-height: var(--trainer-calendar-head-height);
+}
+
+.trainer-calendar-time-rail-track {
+    position: relative;
+    height: var(--trainer-calendar-track-height);
+}
+
+.trainer-calendar-time-marker {
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    top: var(--time-position);
+    transform: translateY(-50%);
+    padding: 3px 6px;
+    background: #f8f8f8;
+    border-radius: 999px;
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    text-align: center;
+}
+
+.trainer-calendar-track {
+    position: relative;
+    height: var(--trainer-calendar-track-height);
+    border: var(--line);
+    border-radius: var(--radius-sm);
+    background:
+        repeating-linear-gradient(
+            to bottom,
+            rgba(255, 255, 255, 0) 0,
+            rgba(255, 255, 255, 0) calc(6.25% - 2px),
+            rgba(17, 17, 17, 0.12) calc(6.25% - 2px),
+            rgba(17, 17, 17, 0.12) 6.25%
+        ),
+        #f8f8f8;
 }
 
 .trainer-calendar-event {
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    top: var(--event-top);
+    min-height: 44px;
+    height: max(var(--event-height), 44px);
     display: grid;
-    gap: 6px;
-    padding: 16px;
+    align-content: start;
+    gap: 5px;
+    padding: 10px 12px;
     border: var(--line);
-    border-top: 10px solid var(--trainer-accent);
-    border-radius: var(--radius-sm);
+    border-radius: 18px;
     box-shadow: var(--shadow);
-    background: linear-gradient(180deg, var(--trainer-soft), rgba(255, 255, 255, 0.98));
+    background: var(--trainer-accent);
     color: var(--trainer-text);
+    overflow: hidden;
 }
 
 .trainer-calendar-event-free {
-    border-top-color: #4f535a;
+    background: #9ca3af;
+    color: #111111;
 }
 
 .trainer-calendar-time {
     margin: 0;
-    color: var(--trainer-accent);
     font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
-    font-size: 0.98rem;
+    font-size: 0.86rem;
     letter-spacing: 0.04em;
     text-transform: uppercase;
 }
 
 .trainer-calendar-event strong {
-    font-size: 1.12rem;
+    font-size: 1.02rem;
+    line-height: 1.1;
 }
 
 .hours-table {
@@ -2131,6 +2205,18 @@ section h2 {
     .discover-media {
         min-height: 280px;
     }
+
+    .trainer-calendar-shell {
+        grid-template-columns: 1fr;
+    }
+
+    .trainer-calendar-time-rail {
+        display: none;
+    }
+
+    .trainer-calendar-grid {
+        grid-auto-columns: minmax(190px, 1fr);
+    }
 }
 
 @media (max-width: 620px) {
@@ -2140,6 +2226,7 @@ section h2 {
         --space-card-lg: 18px;
         --space-stack: 14px;
         --space-flow: 12px;
+        --trainer-calendar-track-height: 680px;
     }
 
     .hero,

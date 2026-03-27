@@ -10,6 +10,8 @@ from dateutil.rrule import rrulestr
 from django.conf import settings
 from django.core.cache import cache
 
+from .trainer_profiles import get_trainer_display_name, get_trainer_palette
+
 
 OPENING_HOURS = {
     0: (time(6, 30), time(22, 0)),
@@ -39,6 +41,16 @@ def get_home_live_status(now: datetime | None = None) -> dict[str, object]:
     open_status = _build_open_status(current_time)
     trainer_status = _build_trainer_status(current_time)
     return {**open_status, **trainer_status}
+
+
+def _build_trainer_card_payload(trainer_name: str, trainer_detail: str) -> dict[str, str]:
+    palette = get_trainer_palette(trainer_name)
+    return {
+        "trainer_name": get_trainer_display_name(trainer_name),
+        "trainer_detail": trainer_detail,
+        "trainer_accent": palette["accent"],
+        "trainer_text": palette["text"],
+    }
 
 
 def _build_open_status(current_time: datetime) -> dict[str, object]:
@@ -74,36 +86,36 @@ def _build_open_status(current_time: datetime) -> dict[str, object]:
 def _build_trainer_status(current_time: datetime) -> dict[str, str]:
     calendar_url = settings.TRAINER_CALENDAR_ICS_URL
     if not calendar_url:
-        return {
-            "trainer_name": "Kalender noch nicht verbunden",
-            "trainer_detail": "Google-Kalender-ICS-URL hinterlegen, damit hier der aktuelle Trainer live erscheint.",
-        }
+        return _build_trainer_card_payload(
+            "Geoeffnet - ohne Trainer",
+            "Google-Kalender-ICS-URL hinterlegen, damit hier der aktuelle Trainer live erscheint.",
+        )
 
     calendar_snapshot = _get_calendar_snapshot()
     if calendar_snapshot["state"] == "offline":
-        return {
-            "trainer_name": "Kalender macht gerade Satzpause",
-            "trainer_detail": "Der Kalender-Server ist gerade nicht erreichbar. Wahrscheinlich dehnt er noch oder sucht das WLAN im Umkleideraum.",
-        }
+        return _build_trainer_card_payload(
+            "Geoeffnet - ohne Trainer",
+            "Der Kalender-Server ist gerade nicht erreichbar. Wahrscheinlich dehnt er noch oder sucht das WLAN im Umkleideraum.",
+        )
 
     current_event = _get_current_calendar_event(current_time, calendar_snapshot["events"])
     if current_event:
-        return {
-            "trainer_name": _clean_event_summary(current_event["summary"]),
-            "trainer_detail": f"Im Kalender bis {current_event['end'].strftime('%H:%M')} Uhr eingetragen.",
-        }
+        return _build_trainer_card_payload(
+            _clean_event_summary(current_event["summary"]),
+            f"Im Kalender bis {current_event['end'].strftime('%H:%M')} Uhr eingetragen.",
+        )
 
     next_event = _get_next_calendar_event(current_time, calendar_snapshot["events"])
     if next_event:
-        return {
-            "trainer_name": "Aktuell kein Trainertermin",
-            "trainer_detail": _format_next_event_text(current_time, next_event),
-        }
+        return _build_trainer_card_payload(
+            "Geoeffnet - ohne Trainer",
+            _format_next_event_text(current_time, next_event),
+        )
 
-    return {
-        "trainer_name": "Kein Kalendereintrag gefunden",
-        "trainer_detail": "Der Kalender ist verbunden, liefert aktuell aber keinen Trainereinsatz.",
-    }
+    return _build_trainer_card_payload(
+        "Geoeffnet - ohne Trainer",
+        "Der Kalender ist verbunden, liefert aktuell aber keinen Trainereinsatz.",
+    )
 
 
 def _get_next_opening(current_time: datetime) -> datetime:
@@ -131,13 +143,14 @@ def _format_next_opening_text(current_time: datetime, next_opening: datetime) ->
 
 
 def _format_next_event_text(current_time: datetime, event: dict[str, object]) -> str:
+    trainer_name = get_trainer_display_name(_clean_event_summary(event["summary"]))
     event_start = event["start"]
     if event_start.date() == current_time.date():
-        return f"Nächster Eintrag heute ab {event_start.strftime('%H:%M')} Uhr: {_clean_event_summary(event['summary'])}"
+        return f"Naechster Eintrag heute ab {event_start.strftime('%H:%M')} Uhr: {trainer_name}"
     if event_start.date() == (current_time + timedelta(days=1)).date():
-        return f"Nächster Eintrag morgen ab {event_start.strftime('%H:%M')} Uhr: {_clean_event_summary(event['summary'])}"
+        return f"Naechster Eintrag morgen ab {event_start.strftime('%H:%M')} Uhr: {trainer_name}"
     weekday_name = WEEKDAY_NAMES[event_start.weekday()]
-    return f"Nächster Eintrag {weekday_name} ab {event_start.strftime('%H:%M')} Uhr: {_clean_event_summary(event['summary'])}"
+    return f"Naechster Eintrag {weekday_name} ab {event_start.strftime('%H:%M')} Uhr: {trainer_name}"
 
 
 def _get_current_calendar_event(
@@ -455,8 +468,4 @@ def _unescape_ical_text(value: str) -> str:
 
 
 def _clean_event_summary(summary: str) -> str:
-    cleaned_summary = summary.strip()
-    for prefix in ("Trainer:", "trainer:", "Coach:", "coach:"):
-        if cleaned_summary.startswith(prefix):
-            return cleaned_summary[len(prefix):].strip()
-    return cleaned_summary
+    return summary.strip()

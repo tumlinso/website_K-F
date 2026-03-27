@@ -5,7 +5,7 @@ from hashlib import md5
 from .autoparse_cal import person_map
 
 
-NO_TRAINER_LABEL = "Geoeffnet - ohne Trainer"
+NO_TRAINER_LABEL = "Geöffnet - ohne Trainer"
 
 BRIGHT_FALLBACK_COLORS = [
     "#55d6ff",

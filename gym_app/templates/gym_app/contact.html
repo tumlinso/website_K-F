@@ -5,12 +5,12 @@
 {% block content %}
 <section class="contact-page">
     <div class="container">
-        <h1>Kontaktieren Sie uns</h1>
+        <h1>Kontakt</h1>
         
         <div class="contact-wrapper">
             <div class="contact-info">
                 <div class="collapsible-section">
-                    <button type="button" class="collapsible-trigger" aria-expanded="true" aria-controls="contact-info-content">Wir freuen uns auf Sie!</button>
+                    <button type="button" class="collapsible-trigger" aria-expanded="true" aria-controls="contact-info-content">Wir freuen uns auf deine Nachricht</button>
                     <div class="collapsible-content" id="contact-info-content">
                         <div class="info-item">
                             <h4>Adresse</h4>
@@ -18,16 +18,21 @@
                         </div>
                         <div class="info-item">
                             <h4>Telefon</h4>
-                            <p>(555) 123-4567</p>
+                            <p>089 80078856</p>
                         </div>
                         <div class="info-item">
                             <h4>E-Mail</h4>
-                            <p>info@kpf-fitnessstudio.de</p>
+                            <p>fitnesstrainer@fc-puchheim.de</p>
                         </div>
                         <div class="info-item">
                             <h4>Öffnungszeiten</h4>
-                            <p>Montag - Freitag: 5:00 - 23:00 Uhr<br>
-                               Samstag - Sonntag: 7:00 - 21:00 Uhr</p>
+                            <p>Montag: 6:30 - 22:00 Uhr<br>
+                               Dienstag: 8:30 - 22:00 Uhr<br>
+                               Mittwoch: 6:30 - 22:00 Uhr<br>
+                               Donnerstag: 8:30 - 22:00 Uhr<br>
+                               Freitag: 6:30 - 22:00 Uhr<br>
+                               Samstag: 13:00 - 17:30 Uhr<br>
+                               Sonn- und Feiertag: 10:00 - 14:30 Uhr</p>
                         </div>
                     </div>
                 </div>
@@ -36,7 +41,7 @@
             <form method="post" class="contact-form">
                 {% csrf_token %}
                 <div class="collapsible-section">
-                    <button type="button" class="collapsible-trigger" aria-expanded="true" aria-controls="contact-form-content">Senden Sie uns eine Nachricht</button>
+                    <button type="button" class="collapsible-trigger" aria-expanded="true" aria-controls="contact-form-content">Schreib uns eine Nachricht</button>
                     <div class="collapsible-content" id="contact-form-content">
                         {% if form.non_field_errors %}
                             <div class="alert alert-error">

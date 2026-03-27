@@ -17,7 +17,7 @@ class ContactViewTests(TestCase):
             {
                 'name': 'Max Mustermann',
                 'email': 'max@example.com',
-                'message': 'Ich interessiere mich fuer eine Mitgliedschaft.',
+                'message': 'Ich interessiere mich für eine Mitgliedschaft.',
             },
             follow=True,
         )
@@ -40,6 +40,6 @@ class ContactViewTests(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Bitte pruefen Sie die markierten Felder.')
+        self.assertContains(response, 'Bitte prüfen Sie die markierten Felder.')
         self.assertEqual(Contact.objects.count(), 0)
         self.assertEqual(len(mail.outbox), 0)

@@ -77,9 +77,9 @@ def contact(request):
                 subject='Ihre Anfrage bei K+F Fitnessstudio',
                 body=(
                     f'Hallo {contact_obj.name},\n\n'
-                    'vielen Dank fuer Ihre Anfrage. Wir haben Ihre Nachricht erhalten '
-                    'und melden uns so schnell wie moeglich bei Ihnen.\n\n'
-                    'Beste Gruesse\n'
+                    'vielen Dank für Ihre Anfrage. Wir haben Ihre Nachricht erhalten '
+                    'und melden uns so schnell wie möglich bei Ihnen.\n\n'
+                    'Beste Grüße\n'
                     'K+F Fitnessstudio Team'
                 ),
                 from_email=settings.DEFAULT_FROM_EMAIL,
@@ -92,7 +92,7 @@ def contact(request):
                 messages.success(
                     request,
                     'Vielen Dank! Ihre Nachricht wurde erfolgreich versendet. '
-                    'Wir werden Ihnen in Kuerze antworten.',
+                    'Wir werden Ihnen in Kürze antworten.',
                 )
             except Exception:
                 logger.exception('Failed to send contact form emails for submission %s', contact_obj.pk)
@@ -104,7 +104,7 @@ def contact(request):
 
             return redirect('contact')
 
-        messages.error(request, 'Bitte pruefen Sie die markierten Felder.')
+        messages.error(request, 'Bitte prüfen Sie die markierten Felder.')
 
     return render(request, 'gym_app/contact.html', {'form': form})
 

@@ -87,8 +87,8 @@ def _build_trainer_status(current_time: datetime) -> dict[str, str]:
     calendar_snapshot = _get_calendar_snapshot()
     if calendar_snapshot["state"] == "offline":
         return _build_trainer_card_payload(
-            "Geoeffnet - ohne Trainer",
-            "Die Kalenderdaten konnten gerade nicht geladen werden. Sobald sie wieder verfuegbar sind, erscheint hier der aktuelle Trainer.",
+            "Geöffnet - ohne Trainer",
+            "Die Kalenderdaten konnten gerade nicht geladen werden. Sobald sie wieder verfügbar sind, erscheint hier der aktuelle Trainer.",
         )
 
     current_event = _get_current_calendar_event(current_time, calendar_snapshot["events"])
@@ -101,12 +101,12 @@ def _build_trainer_status(current_time: datetime) -> dict[str, str]:
     next_event = _get_next_calendar_event(current_time, calendar_snapshot["events"])
     if next_event:
         return _build_trainer_card_payload(
-            "Geoeffnet - ohne Trainer",
+            "Geöffnet - ohne Trainer",
             _format_next_event_text(current_time, next_event),
         )
 
     return _build_trainer_card_payload(
-        "Geoeffnet - ohne Trainer",
+        "Geöffnet - ohne Trainer",
         "Der Kalender ist verbunden, liefert aktuell aber keinen Trainereinsatz.",
     )
 
@@ -139,11 +139,11 @@ def _format_next_event_text(current_time: datetime, event: dict[str, object]) ->
     trainer_name = get_trainer_display_name(_clean_event_summary(event["summary"]))
     event_start = event["start"]
     if event_start.date() == current_time.date():
-        return f"Naechster Eintrag heute ab {event_start.strftime('%H:%M')} Uhr: {trainer_name}"
+        return f"Nächster Eintrag heute ab {event_start.strftime('%H:%M')} Uhr: {trainer_name}"
     if event_start.date() == (current_time + timedelta(days=1)).date():
-        return f"Naechster Eintrag morgen ab {event_start.strftime('%H:%M')} Uhr: {trainer_name}"
+        return f"Nächster Eintrag morgen ab {event_start.strftime('%H:%M')} Uhr: {trainer_name}"
     weekday_name = WEEKDAY_NAMES[event_start.weekday()]
-    return f"Naechster Eintrag {weekday_name} ab {event_start.strftime('%H:%M')} Uhr: {trainer_name}"
+    return f"Nächster Eintrag {weekday_name} ab {event_start.strftime('%H:%M')} Uhr: {trainer_name}"
 
 
 def _get_current_calendar_event(

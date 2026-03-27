@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 
-{% block title %}Offnungszeiten - FC Puchheim e.V. Fitness-Studio{% endblock %}
+{% block title %}Öffnungszeiten - FC Puchheim e.V. Fitness-Studio{% endblock %}
 
 {% block content %}
 <section class="hours-hero">
     <div class="hours-hero-inner">
-        <h1>Offnungszeiten</h1>
+        <h1>Öffnungszeiten</h1>
         <p>FC Puchheim e.V. Fitness-Studio</p>
     </div>
 </section>
@@ -29,9 +29,9 @@
             </div>
             <div class="hours-notes">
                 <h3>Wichtige Hinweise</h3>
-                <p>Grundsatzlich ist wahrend der Offnungszeiten ein Trainer anwesend. An einzelnen Tagen, zum Beispiel in den Schulferien, kann es trainerfreie Zeitfenster geben.</p>
-                <p>Zu den regulären Offnungszeiten sind wir per Telefon und E-Mail erreichbar. Kurzfristige Abweichungen kommunizieren wir uber unsere Kanale und Aushange im Studio.</p>
-                <p>Bei Fragen zu Probetraining oder Mitgliedschaft kontaktiere uns gerne direkt uber die Kontaktseite.</p>
+                <p>Grundsätzlich ist während der Öffnungszeiten ein Trainer anwesend. An einzelnen Tagen, zum Beispiel in den Schulferien, kann es trainerfreie Zeitfenster geben.</p>
+                <p>Zu den regulären Öffnungszeiten sind wir per Telefon und E-Mail erreichbar. Kurzfristige Abweichungen kommunizieren wir über unsere Kanäle und Aushänge im Studio.</p>
+                <p>Bei Fragen zu Probetraining oder Mitgliedschaft kontaktiere uns gerne direkt über die Kontaktseite.</p>
                 <a href="{% url 'contact' %}" class="btn btn-primary">Jetzt Kontakt aufnehmen</a>
             </div>
         </div>
@@ -40,7 +40,7 @@
 
 <section class="hours-section">
     <div class="container collapsible-section">
-        <button type="button" class="collapsible-trigger" aria-expanded="true" aria-controls="hours-planning-content">Trainer-Prasenz und Planung</button>
+        <button type="button" class="collapsible-trigger" aria-expanded="true" aria-controls="hours-planning-content">Trainer-Präsenz und Planung</button>
         <div class="hours-calendar-placeholder collapsible-content" id="hours-planning-content">
             {% if trainer_calendar_days %}
                 <div class="trainer-calendar-shell">
@@ -87,7 +87,7 @@
                     </div>
                 </div>
             {% else %}
-                <p>Aktuell konnten keine Trainertermine aus dem Kalender geladen werden. Sobald deine geparsten Kalenderdaten verfugbar sind, erscheinen sie hier automatisch.</p>
+                <p>Aktuell konnten keine Trainertermine aus dem Kalender geladen werden. Sobald deine geparsten Kalenderdaten verfügbar sind, erscheinen sie hier automatisch.</p>
             {% endif %}
         </div>
     </div>

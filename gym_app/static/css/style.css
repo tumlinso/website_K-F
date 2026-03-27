@@ -1677,6 +1677,239 @@ section h2 {
     justify-items: start;
 }
 
+.monatskarte-hero-inner {
+    display: grid;
+    gap: 16px;
+}
+
+.monatskarte-hero-inner .hero-kicker {
+    margin-bottom: 0;
+}
+
+.monatskarte-hero-lead {
+    max-width: 62ch;
+    font-size: 1.08rem;
+    color: rgba(248, 248, 248, 0.94);
+}
+
+.monatskarte-hero-facts {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.monatskarte-hero-fact,
+.monatskarte-benefit-item,
+.monatskarte-price-box,
+.monatskarte-highlight-meta-card,
+.monatskarte-example-card,
+.monatskarte-footnote-card,
+.monatskarte-next-step-shell {
+    padding: var(--space-card);
+    border: var(--line);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow);
+}
+
+.monatskarte-hero-fact {
+    display: grid;
+    gap: 4px;
+    background: rgba(248, 248, 248, 0.12);
+}
+
+.monatskarte-hero-fact span,
+.monatskarte-price-box span,
+.monatskarte-highlight-meta-card span,
+.monatskarte-example-card span {
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.monatskarte-hero-fact strong,
+.monatskarte-price-box strong,
+.monatskarte-highlight-meta-card strong,
+.monatskarte-example-card strong {
+    font-size: 1.45rem;
+    line-height: 1;
+}
+
+.monatskarte-hero-fact small {
+    color: rgba(248, 248, 248, 0.88);
+}
+
+.monatskarte-detail-copy {
+    gap: 18px;
+}
+
+.monatskarte-story-card,
+.monatskarte-included-card,
+.monatskarte-pricing-card,
+.monatskarte-table-grid .tariff-table-card,
+.monatskarte-next-step-shell {
+    background: linear-gradient(180deg, #f7f8fa, #d7dce3);
+}
+
+.monatskarte-kicker {
+    margin-bottom: 0;
+}
+
+.monatskarte-card-title,
+.monatskarte-section-title {
+    display: block;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    color: var(--text);
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+    font-size: clamp(2rem, 3vw, 3rem);
+    line-height: 0.98;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.monatskarte-card-copy,
+.monatskarte-section-copy,
+.monatskarte-table-intro {
+    color: var(--text-soft);
+    font-size: 1.02rem;
+}
+
+.monatskarte-benefit-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.monatskarte-benefit-item {
+    display: grid;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.72);
+}
+
+.monatskarte-benefit-item h3,
+.monatskarte-table-grid .tariff-table-card h3 {
+    margin: 0;
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+    font-size: 1.3rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+.monatskarte-price-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.monatskarte-price-box {
+    display: grid;
+    gap: 8px;
+    background: rgba(17, 17, 17, 0.06);
+}
+
+.monatskarte-price-box small,
+.monatskarte-highlight-meta-card small,
+.monatskarte-example-card small {
+    color: var(--text-soft);
+}
+
+.monatskarte-highlight-card {
+    gap: 16px;
+    background: linear-gradient(180deg, #fff7f7, #e9d3d3);
+    text-align: left;
+}
+
+.monatskarte-highlight-badge {
+    display: inline-block;
+    width: fit-content;
+    padding: 7px 12px;
+    border: var(--line);
+    border-radius: 999px;
+    box-shadow: var(--shadow);
+    background: var(--site-black);
+    color: var(--text-light);
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.monatskarte-highlight-price {
+    width: fit-content;
+    max-width: 100%;
+}
+
+.monatskarte-highlight-meta {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.monatskarte-highlight-meta-card {
+    display: grid;
+    gap: 4px;
+    background: rgba(255, 255, 255, 0.64);
+}
+
+.monatskarte-highlight-meta-card strong {
+    font-size: 1.2rem;
+    line-height: 1.05;
+}
+
+.monatskarte-highlight-actions,
+.monatskarte-next-step-actions {
+    display: grid;
+    gap: 12px;
+    justify-items: start;
+}
+
+.monatskarte-pricing-shell {
+    display: grid;
+    gap: 20px;
+}
+
+.monatskarte-section-head {
+    display: grid;
+    gap: 12px;
+    max-width: 820px;
+}
+
+.monatskarte-example-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.monatskarte-example-card {
+    display: grid;
+    gap: 8px;
+    background: linear-gradient(180deg, rgba(248, 248, 248, 0.96), rgba(217, 219, 224, 0.96));
+}
+
+.monatskarte-table-grid .tariff-table-card {
+    display: grid;
+    gap: 14px;
+}
+
+.monatskarte-footnote-card {
+    background: rgba(17, 17, 17, 0.84);
+}
+
+.monatskarte-footnote-card .tariff-footnote {
+    margin: 0;
+}
+
+.monatskarte-next-step-shell {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) auto;
+    gap: 18px;
+    align-items: center;
+}
+
 .class-info,
 .class-description {
     padding: var(--space-card);
@@ -2251,6 +2484,11 @@ section h2 {
     .membership-benefit-grid,
     .membership-example-grid,
     .membership-highlight-meta,
+    .monatskarte-hero-facts,
+    .monatskarte-benefit-grid,
+    .monatskarte-price-grid,
+    .monatskarte-highlight-meta,
+    .monatskarte-example-grid,
     .probemonat-hero-facts,
     .probemonat-benefit-grid,
     .probemonat-price-grid,
@@ -2265,6 +2503,7 @@ section h2 {
 
     .membership-formula,
     .membership-next-step-shell,
+    .monatskarte-next-step-shell,
     .probemonat-next-step-shell {
         grid-template-columns: 1fr;
     }

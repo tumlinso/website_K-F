@@ -1,4 +1,5 @@
 from pathlib import Path
+import os
 
 import pandas as pd
 from icalendar import Calendar
@@ -98,8 +99,38 @@ def download_web_calendar_ics(ics_address_webcal, save_path=internal_ics_path):
         print(f"Error downloading calendar: {e}")
         return False
 
-# dates since 30 days ago until 30 days in the future
-def parse_ics_file(internal_ics_path, start_date=datetime.now(timezone.utc) - timedelta(days=30), end_date=datetime.now(timezone.utc) + timedelta(days=30)):
+def _get_sync_interval_seconds():
+    return int(os.getenv("TRAINER_CALENDAR_SYNC_INTERVAL_SECONDS", "1800"))
+
+
+def _get_parse_window_days():
+    lookback_days = int(os.getenv("TRAINER_CALENDAR_SYNC_PAST_DAYS", "2"))
+    lookahead_days = int(os.getenv("TRAINER_CALENDAR_SYNC_FUTURE_DAYS", "21"))
+    return lookback_days, lookahead_days
+
+
+def _file_is_fresh(path, max_age_seconds):
+    path = Path(path)
+    if not path.exists():
+        return False
+    file_age_seconds = datetime.now(timezone.utc).timestamp() - path.stat().st_mtime
+    return file_age_seconds < max_age_seconds
+
+
+def parse_ics_file(internal_ics_path, start_date=None, end_date=None, lookback_days=None, lookahead_days=None):
+    if start_date is None or end_date is None:
+        default_lookback_days, default_lookahead_days = _get_parse_window_days()
+        if lookback_days is None:
+            lookback_days = default_lookback_days
+        if lookahead_days is None:
+            lookahead_days = default_lookahead_days
+
+        now = datetime.now(timezone.utc)
+        if start_date is None:
+            start_date = now - timedelta(days=lookback_days)
+        if end_date is None:
+            end_date = now + timedelta(days=lookahead_days)
+
     with Path(internal_ics_path).open("r", encoding="utf-8") as f:
         calendar = Calendar.from_ical(f.read())
     
@@ -174,20 +205,38 @@ def load_processed_calendar_csv(path=processed_csv_path):
 def sync_calendar(
         ics_address_webcal = ics_address_webcal,
         internal_ics_path = internal_ics_path,
-        person_map = person_map
+        person_map = person_map,
+        processed_csv = processed_csv_path,
+        sync_interval_seconds = None,
+        lookback_days = None,
+        lookahead_days = None,
         ):
-    download_ok = download_web_calendar_ics(ics_address_webcal, internal_ics_path)
-    if not download_ok and not internal_ics_path.exists():
-        raise RuntimeError(
-            f"Could not download the ICS feed and no local file exists at {internal_ics_path}"
-        )
+    if sync_interval_seconds is None:
+        sync_interval_seconds = _get_sync_interval_seconds()
 
-    df = parse_ics_file(internal_ics_path)
+    if _file_is_fresh(processed_csv, sync_interval_seconds):
+        return load_processed_calendar_csv(processed_csv)
+
+    download_ok = download_web_calendar_ics(ics_address_webcal, internal_ics_path)
+    if not download_ok:
+        if Path(processed_csv).exists():
+            return load_processed_calendar_csv(processed_csv)
+        if not Path(internal_ics_path).exists():
+            raise RuntimeError(
+                f"Could not download the ICS feed and no local file exists at {internal_ics_path}"
+            )
+
+    df = parse_ics_file(
+        internal_ics_path,
+        lookback_days=lookback_days,
+        lookahead_days=lookahead_days,
+    )
     if df.empty:
+        save_to_csv(df, processed_csv)
         return df
 
     df = process_calendar_df(df, person_map)
-    save_to_csv(df)
+    save_to_csv(df, processed_csv)
     return df
 
 if __name__ == "__main__":

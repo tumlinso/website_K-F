@@ -18,7 +18,6 @@ from .trainer_profiles import (
 
 
 CALENDAR_CACHE_KEY = "gym_app_trainer_calendar_days"
-CALENDAR_CACHE_SECONDS = 300
 CALENDAR_DAY_START_HOUR = 6
 CALENDAR_DAY_END_HOUR = 22
 CALENDAR_DAY_TOTAL_MINUTES = (CALENDAR_DAY_END_HOUR - CALENDAR_DAY_START_HOUR) * 60
@@ -82,7 +81,10 @@ def _load_calendar_df():
         return load_processed_calendar_csv()
 
 
-def get_trainer_calendar_days(limit_days: int = 10) -> list[dict[str, object]]:
+def get_trainer_calendar_days(limit_days: int | None = None) -> list[dict[str, object]]:
+    if limit_days is None:
+        limit_days = settings.TRAINER_CALENDAR_VIEW_DAYS
+
     cache_key = f"{CALENDAR_CACHE_KEY}_{limit_days}"
     cached = cache.get(cache_key)
     if cached is not None:
@@ -90,7 +92,7 @@ def get_trainer_calendar_days(limit_days: int = 10) -> list[dict[str, object]]:
 
     df = _load_calendar_df()
     if df.empty:
-        cache.set(cache_key, [], CALENDAR_CACHE_SECONDS)
+        cache.set(cache_key, [], settings.TRAINER_CALENDAR_CACHE_SECONDS)
         return []
 
     tz = ZoneInfo(settings.GYM_TIMEZONE)
@@ -149,5 +151,5 @@ def get_trainer_calendar_days(limit_days: int = 10) -> list[dict[str, object]]:
             }
         )
 
-    cache.set(cache_key, days, CALENDAR_CACHE_SECONDS)
+    cache.set(cache_key, days, settings.TRAINER_CALENDAR_CACHE_SECONDS)
     return days

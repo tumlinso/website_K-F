@@ -6,6 +6,7 @@ from .autoparse_cal import person_map
 
 
 NO_TRAINER_LABEL = "Geöffnet - ohne Trainer"
+NO_TRAINER_PREFIX_TOKEN = "geoeffnet ohne trainer"
 
 BRIGHT_FALLBACK_COLORS = [
     "#55d6ff",
@@ -66,6 +67,13 @@ def normalize_trainer_name(name: str) -> str:
     )
 
 
+def normalize_trainer_lookup_token(name: str) -> str:
+    normalized_name = normalize_trainer_name(name).casefold()
+    for separator in ("-", ".", ",", ":", ";", "(", ")"):
+        normalized_name = normalized_name.replace(separator, " ")
+    return " ".join(normalized_name.split())
+
+
 def strip_trainer_prefix(name: str) -> str:
     cleaned_name = str(name).strip()
     for prefix in ("Trainer:", "trainer:", "Coach:", "coach:"):
@@ -74,12 +82,18 @@ def strip_trainer_prefix(name: str) -> str:
     return cleaned_name
 
 
+def _is_no_trainer_token(token: str) -> bool:
+    if not token:
+        return False
+    return token == NO_TRAINER_PREFIX_TOKEN or token.startswith(f"{NO_TRAINER_PREFIX_TOKEN} ")
+
+
 def _build_alias_lookup() -> dict[str, str]:
     alias_lookup: dict[str, str] = {}
     for canonical_name, aliases in person_map.items():
-        alias_lookup[normalize_trainer_name(canonical_name)] = canonical_name
+        alias_lookup[normalize_trainer_lookup_token(canonical_name)] = canonical_name
         for alias in aliases:
-            alias_lookup[normalize_trainer_name(alias)] = canonical_name
+            alias_lookup[normalize_trainer_lookup_token(alias)] = canonical_name
     return alias_lookup
 
 
@@ -90,15 +104,16 @@ def canonicalize_trainer_name(name: str) -> str:
     cleaned_name = strip_trainer_prefix(name)
     if not cleaned_name:
         return ""
-    normalized_name = normalize_trainer_name(cleaned_name)
-    return _ALIAS_LOOKUP.get(normalized_name, cleaned_name)
+    lookup_token = normalize_trainer_lookup_token(cleaned_name)
+    if _is_no_trainer_token(lookup_token):
+        return NO_TRAINER_LABEL
+    return _ALIAS_LOOKUP.get(lookup_token, cleaned_name)
 
 
 def _build_first_name_counts() -> dict[str, int]:
     counts: dict[str, int] = {}
     for canonical_name in _CANONICAL_NAMES:
-        normalized_name = normalize_trainer_name(canonical_name)
-        if normalized_name == NO_TRAINER_LABEL:
+        if _is_no_trainer_token(normalize_trainer_lookup_token(canonical_name)):
             continue
         first_name = canonical_name.split()[0]
         normalized_first_name = normalize_trainer_name(first_name)
@@ -111,11 +126,10 @@ _FIRST_NAME_COUNTS = _build_first_name_counts()
 
 def get_trainer_display_name(name: str) -> str:
     canonical_name = canonicalize_trainer_name(name)
-    normalized_name = normalize_trainer_name(canonical_name)
 
     if not canonical_name:
         return ""
-    if normalized_name == NO_TRAINER_LABEL:
+    if is_trainer_free(canonical_name):
         return "Ohne Trainer"
 
     name_parts = canonical_name.split()
@@ -148,7 +162,7 @@ def _build_palette_lookup() -> dict[str, dict[str, str]]:
             accent = BRIGHT_FALLBACK_COLORS[fallback_index % len(BRIGHT_FALLBACK_COLORS)]
             fallback_index += 1
 
-        palette_lookup[normalize_trainer_name(canonical_name)] = {
+        palette_lookup[normalize_trainer_lookup_token(canonical_name)] = {
             "accent": accent,
             "text": _pick_text_color(accent),
         }
@@ -161,7 +175,7 @@ _PALETTE_LOOKUP = _build_palette_lookup()
 
 def get_trainer_palette(name: str) -> dict[str, str]:
     canonical_name = canonicalize_trainer_name(name)
-    normalized_name = normalize_trainer_name(canonical_name)
+    normalized_name = normalize_trainer_lookup_token(canonical_name)
 
     if normalized_name in _PALETTE_LOOKUP:
         return _PALETTE_LOOKUP[normalized_name]
@@ -174,4 +188,4 @@ def get_trainer_palette(name: str) -> dict[str, str]:
 
 
 def is_trainer_free(name: str) -> bool:
-    return normalize_trainer_name(canonicalize_trainer_name(name)) == NO_TRAINER_LABEL
+    return _is_no_trainer_token(normalize_trainer_lookup_token(canonicalize_trainer_name(name)))

@@ -115,6 +115,10 @@ def get_trainer_calendar_days(limit_days: int | None = None) -> list[dict[str, o
         if is_trainer_free(trainer_name):
             continue
 
+        display_name = get_trainer_display_name(trainer_name)
+        if display_name == "Ohne Trainer":
+            continue
+
         palette = get_trainer_palette(trainer_name)
 
         start_minutes = max(0, _minutes_since_calendar_start(start.hour, start.minute))
@@ -126,7 +130,7 @@ def get_trainer_calendar_days(limit_days: int | None = None) -> list[dict[str, o
 
         grouped_events[start.date()].append(
             {
-                "trainer_name": get_trainer_display_name(trainer_name),
+                "trainer_name": display_name,
                 "time_label": f"{start.strftime('%H:%M')} - {end.strftime('%H:%M')} Uhr",
                 "start_iso": start.isoformat(),
                 "end_iso": end.isoformat(),

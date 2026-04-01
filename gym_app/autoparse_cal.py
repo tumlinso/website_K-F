@@ -43,7 +43,8 @@ person_map = {
     'Gabriela Baum' : ['Gabi', 'Gabriela'],
     'Dominic Müller' : ['Dominic', 'Domi', 'Dominik'],
     'Shkelqim Istrefi' : ['Shkelqim', 'Shkeli'],
-    'Thorsten Straub' : ['Thorsten', 'Thosten']
+    'Thorsten Straub' : ['Thorsten', 'Thosten'],
+    'Uwe Mathesius' : ['Uwe'],
 }
 
 drop_keys_caseless = [

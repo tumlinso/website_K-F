@@ -1,6 +1,7 @@
 from django.core import mail
 from django.test import TestCase, override_settings
 from django.urls import reverse
+from unittest.mock import patch
 
 from .models import Contact
 
@@ -41,5 +42,24 @@ class ContactViewTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Bitte prüfen Sie die markierten Felder.')
+        self.assertEqual(Contact.objects.count(), 0)
+        self.assertEqual(len(mail.outbox), 0)
+
+    @patch('gym_app.views.ContactForm.save', side_effect=Exception('database unavailable'))
+    def test_save_failure_returns_service_unavailable_without_sending_email(self, _mock_save):
+        response = self.client.post(
+            reverse('contact'),
+            {
+                'name': 'Max Mustermann',
+                'email': 'max@example.com',
+                'message': 'Ich interessiere mich für eine Mitgliedschaft.',
+            },
+        )
+
+        self.assertEqual(response.status_code, 503)
+        self.assertContains(
+            response,
+            'Ihre Nachricht konnte gerade nicht gespeichert werden.',
+        )
         self.assertEqual(Contact.objects.count(), 0)
         self.assertEqual(len(mail.outbox), 0)

@@ -60,7 +60,16 @@ def contact(request):
 
     if request.method == 'POST':
         if form.is_valid():
-            contact_obj = form.save()
+            try:
+                contact_obj = form.save()
+            except Exception:
+                logger.exception('Failed to save contact form submission')
+                messages.error(
+                    request,
+                    'Ihre Nachricht konnte gerade nicht gespeichert werden. '
+                    'Bitte versuchen Sie es in Kürze erneut oder kontaktieren Sie uns direkt per E-Mail.',
+                )
+                return render(request, 'gym_app/contact.html', {'form': form}, status=503)
 
             admin_message = EmailMessage(
                 subject=f'Neue Kontaktanfrage von {contact_obj.name}',

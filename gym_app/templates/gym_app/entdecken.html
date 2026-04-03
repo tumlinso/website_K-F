@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Entdecken - FC Puchheim e.V. Fitness-Studio{% endblock %}
 
@@ -45,94 +46,20 @@
     <div class="container collapsible-section">
         <button type="button" class="collapsible-trigger" aria-expanded="true" aria-controls="discover-team-content">Unser Trainer-Team</button>
         <div class="trainer-grid collapsible-content" id="discover-team-content">
-            <article class="trainer-card">
-                <h4>Gavin Tumlinson</h4>
-                <p>Abteilungsleiter</p>
-            </article>
-            <article class="trainer-card">
-                <h4>Felix Blumenschein</h4>
-                <p>A-Trainer (IST), Studioleiter</p>
-            </article>
-            <article class="trainer-card">
-                <h4>Dominic Muller</h4>
-                <p>C-Trainer (BGKV), Stellvertretender Abteilungsleiter</p>
-            </article>
-            <article class="trainer-card">
-                <h4>Gabriela Baum</h4>
-                <p>A-Trainerin (DOSB)</p>
-            </article>
-            <article class="trainer-card">
-                <h4>Ines Drescher</h4>
-                <p>C-Trainerin (BGKV)</p>
-            </article>
-            <article class="trainer-card">
-                <h4>Shkelqim Istrefi</h4>
-                <p>C-Trainer (BGKV in Ausbildung)</p>
-            </article>
-            <article class="trainer-card">
-                <h4>Tobi Fraunholz</h4>
-                <p>B-Trainer (BGKV)</p>
-            </article>
-            <article class="trainer-card">
-                <h4>Tassilo Friedrich</h4>
-                <p>B-Trainer (BSA)</p>
-            </article>
-            <article class="trainer-card">
-                <h4>Felix Gansmeier</h4>
-                <p>B-Trainer (BSA)</p>
-            </article>
-            <article class="trainer-card">
-                <h4>Thomas Gansmeier</h4>
-                <p>C-Trainer (BGKV)</p>
-            </article>
-            <article class="trainer-card">
-                <h4>Richard Leger</h4>
-                <p>A-Trainer (DOSB)</p>
-            </article>
-            <article class="trainer-card">
-                <h4>Gisela Lehner</h4>
-                <p>A-Trainerin (DOSB)</p>
-            </article>
-            <article class="trainer-card">
-                <h4>Angela Mittermeier</h4>
-                <p>A-Trainerin (DOSB)</p>
-            </article>
-            <article class="trainer-card">
-                <h4>Jo Mittermeier</h4>
-                <p>C-Trainer (BGKV)</p>
-            </article>
-            <article class="trainer-card">
-                <h4>Elisabeth Sandler</h4>
-                <p>B-Trainerin (BGKV)</p>
-            </article>
-            <article class="trainer-card">
-                <h4>Britta Schneider</h4>
-                <p>B-Trainerin (BSA)</p>
-            </article>
-            <article class="trainer-card">
-                <h4>Laurenz Schneider</h4>
-                <p>C-Trainer (BGKV)</p>
-            </article>
-            <article class="trainer-card">
-                <h4>Linus Schneider</h4>
-                <p>C-Trainer (BGKV in Ausbildung)</p>
-            </article>
-            <article class="trainer-card">
-                <h4>Karin Sikora</h4>
-                <p>B-Trainerin (BGKV)</p>
-            </article>
-            <article class="trainer-card">
-                <h4>Vincent Schweigler</h4>
-                <p>A-Trainer (IST)</p>
-            </article>
-            <article class="trainer-card">
-                <h4>Felix Kameritsch</h4>
-                <p>C-Trainer (BGKV)</p>
-            </article>
-            <article class="trainer-card">
-                <h4>Maximilian Kameritsch</h4>
-                <p>C-Trainer (BGKV in Ausbildung)</p>
-            </article>
+            {% for trainer in trainer_cards %}
+                <article class="trainer-card">
+                    <div class="trainer-card-media">
+                        <img src="{% static trainer.image_path %}" alt="{{ trainer.name }}" loading="lazy">
+                    </div>
+                    <h4>{{ trainer.name }}</h4>
+                    {% if trainer.title %}
+                        <p class="trainer-card-title">{{ trainer.title }}</p>
+                    {% endif %}
+                    {% if trainer.quote %}
+                        <p class="trainer-card-quote">"{{ trainer.quote }}"</p>
+                    {% endif %}
+                </article>
+            {% endfor %}
         </div>
     </div>
 </section>

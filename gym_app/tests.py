@@ -145,3 +145,13 @@ class ContactViewTests(TestCase):
         )
         self.assertEqual(Contact.objects.count(), 0)
         self.assertEqual(len(mail.outbox), 0)
+
+
+class DiscoverPageTests(TestCase):
+    def test_entdecken_renders_trainer_cards_with_quotes(self):
+        response = self.client.get(reverse('entdecken'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Gavin Tumlinson')
+        self.assertContains(response, 'Alea iacta est.')
+        self.assertContains(response, 'trainer/Gavin/B9D9DC3A-70D5-4992-8CF5-737C1EAD49DE.jpeg')

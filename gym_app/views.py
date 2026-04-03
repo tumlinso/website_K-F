@@ -10,6 +10,7 @@ from django.views.decorators.http import require_http_methods
 from .forms import ContactForm
 from .live_status import get_home_live_status
 from .models import Membership, Class, NewsPost
+from .trainer_cards import TRAINER_CARDS
 from .trainer_calendar import get_trainer_calendar_days, get_trainer_calendar_time_markers
 
 logger = logging.getLogger(__name__)
@@ -196,7 +197,7 @@ def about(request):
 
 def entdecken(request):
     """Entdecken page"""
-    return render(request, 'gym_app/entdecken.html')
+    return render(request, 'gym_app/entdecken.html', {'trainer_cards': TRAINER_CARDS})
 
 
 def oeffnungszeiten(request):

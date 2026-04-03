@@ -152,22 +152,23 @@ def contact(request):
                 to=[settings.CONTACT_RECIPIENT_EMAIL],
                 reply_to=[contact_obj.email],
             )
-            confirmation_message = EmailMessage(
-                subject='Ihre Anfrage bei K+F Fitnessstudio',
-                body=(
-                    f'Hallo {contact_obj.name},\n\n'
-                    'vielen Dank für Ihre Anfrage. Wir haben Ihre Nachricht erhalten '
-                    'und melden uns so schnell wie möglich bei Ihnen.\n\n'
-                    'Beste Grüße\n'
-                    'K+F Fitnessstudio Team'
-                ),
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                to=[contact_obj.email],
-            )
 
             try:
                 admin_message.send(fail_silently=False)
-                confirmation_message.send(fail_silently=False)
+                if settings.CONTACT_AUTORESPONDER_ENABLED:
+                    confirmation_message = EmailMessage(
+                        subject='Ihre Anfrage bei K+F Fitnessstudio',
+                        body=(
+                            f'Hallo {contact_obj.name},\n\n'
+                            'vielen Dank für Ihre Anfrage. Wir haben Ihre Nachricht erhalten '
+                            'und melden uns so schnell wie möglich bei Ihnen.\n\n'
+                            'Beste Grüße\n'
+                            'K+F Fitnessstudio Team'
+                        ),
+                        from_email=settings.DEFAULT_FROM_EMAIL,
+                        to=[contact_obj.email],
+                    )
+                    confirmation_message.send(fail_silently=False)
                 messages.success(
                     request,
                     'Vielen Dank! Ihre Nachricht wurde erfolgreich versendet. '

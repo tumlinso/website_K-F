@@ -1,5 +1,6 @@
 import logging
 
+import requests
 from django.conf import settings
 from django.contrib import messages
 from django.core.mail import EmailMessage
@@ -12,6 +13,63 @@ from .models import Membership, Class, NewsPost
 from .trainer_calendar import get_trainer_calendar_days, get_trainer_calendar_time_markers
 
 logger = logging.getLogger(__name__)
+
+
+def _build_contact_context(form):
+    return {
+        'form': form,
+        'recaptcha_site_key': settings.RECAPTCHA_SITE_KEY,
+        'recaptcha_enabled': settings.RECAPTCHA_ENABLED,
+    }
+
+
+def _get_client_ip(request):
+    forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR', '')
+    if forwarded_for:
+        return forwarded_for.split(',')[0].strip()
+
+    return request.META.get('REMOTE_ADDR', '')
+
+
+def _verify_contact_recaptcha(request):
+    if not settings.RECAPTCHA_ENABLED:
+        logger.error('reCAPTCHA is not configured for the contact form')
+        return False, (
+            'Die Sicherheitsprüfung ist noch nicht eingerichtet. '
+            'Bitte kontaktieren Sie uns direkt per E-Mail.'
+        )
+
+    recaptcha_response = request.POST.get('g-recaptcha-response', '').strip()
+    if not recaptcha_response:
+        return False, 'Bitte bestätigen Sie, dass Sie kein Roboter sind.'
+
+    try:
+        response = requests.post(
+            settings.RECAPTCHA_VERIFY_URL,
+            data={
+                'secret': settings.RECAPTCHA_SECRET_KEY,
+                'response': recaptcha_response,
+                'remoteip': _get_client_ip(request),
+            },
+            timeout=settings.RECAPTCHA_TIMEOUT_SECONDS,
+        )
+        response.raise_for_status()
+        payload = response.json()
+    except (requests.RequestException, ValueError):
+        logger.exception('Failed to verify reCAPTCHA for contact form submission')
+        return False, (
+            'Die Sicherheitsprüfung konnte gerade nicht bestätigt werden. '
+            'Bitte versuchen Sie es erneut.'
+        )
+
+    if payload.get('success'):
+        return True, None
+
+    logger.warning(
+        'reCAPTCHA rejected contact form submission with codes: %s',
+        payload.get('error-codes', []),
+    )
+    return False, 'Bitte bestätigen Sie, dass Sie kein Roboter sind.'
 
 
 def home(request):
@@ -59,7 +117,14 @@ def contact(request):
     form = ContactForm(request.POST or None)
 
     if request.method == 'POST':
-        if form.is_valid():
+        form_valid = form.is_valid()
+        if form_valid:
+            recaptcha_valid, recaptcha_error = _verify_contact_recaptcha(request)
+            if not recaptcha_valid:
+                form.add_error(None, recaptcha_error)
+                form_valid = False
+
+        if form_valid:
             try:
                 contact_obj = form.save()
             except Exception:
@@ -69,7 +134,12 @@ def contact(request):
                     'Ihre Nachricht konnte gerade nicht gespeichert werden. '
                     'Bitte versuchen Sie es in Kürze erneut oder kontaktieren Sie uns direkt per E-Mail.',
                 )
-                return render(request, 'gym_app/contact.html', {'form': form}, status=503)
+                return render(
+                    request,
+                    'gym_app/contact.html',
+                    _build_contact_context(form),
+                    status=503,
+                )
 
             admin_message = EmailMessage(
                 subject=f'Neue Kontaktanfrage von {contact_obj.name}',
@@ -115,7 +185,7 @@ def contact(request):
 
         messages.error(request, 'Bitte prüfen Sie die markierten Felder.')
 
-    return render(request, 'gym_app/contact.html', {'form': form})
+    return render(request, 'gym_app/contact.html', _build_contact_context(form))
 
 
 def about(request):

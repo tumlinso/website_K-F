@@ -40,6 +40,7 @@
             
             <form method="post" class="contact-form">
                 {% csrf_token %}
+                {{ form.website }}
                 <div class="collapsible-section">
                     <button type="button" class="collapsible-trigger" aria-expanded="true" aria-controls="contact-form-content">Schreib uns eine Nachricht</button>
                     <div class="collapsible-content" id="contact-form-content">
@@ -75,6 +76,16 @@
                             {% endfor %}
                         </div>
 
+                        {% if recaptcha_site_key %}
+                            <div class="form-group">
+                                <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}"></div>
+                            </div>
+                        {% else %}
+                            <div class="alert alert-warning">
+                                <p>reCAPTCHA ist noch nicht eingerichtet. Bitte hinterlege den Google Site Key und Secret Key auf dem Server.</p>
+                            </div>
+                        {% endif %}
+
                         <button type="submit" class="btn btn-primary btn-large">Nachricht senden</button>
                     </div>
                 </div>
@@ -82,4 +93,7 @@
         </div>
     </div>
 </section>
+{% if recaptcha_site_key %}
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+{% endif %}
 {% endblock %}

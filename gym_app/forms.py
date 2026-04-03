@@ -4,6 +4,8 @@ from .models import Contact
 
 
 class ContactForm(forms.ModelForm):
+    website = forms.CharField(required=False, widget=forms.HiddenInput)
+
     class Meta:
         model = Contact
         fields = ['name', 'email', 'message']
@@ -16,3 +18,10 @@ class ContactForm(forms.ModelForm):
 
     def clean_message(self):
         return self.cleaned_data['message'].strip()
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if cleaned_data.get('website'):
+            raise forms.ValidationError('Sicherheitsprüfung fehlgeschlagen.')
+
+        return cleaned_data

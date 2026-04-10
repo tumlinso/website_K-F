@@ -19,8 +19,8 @@ OPENING_HOURS = {
     2: (time(6, 30), time(22, 0)),
     3: (time(8, 30), time(22, 0)),
     4: (time(6, 30), time(22, 0)),
-    5: (time(13, 0), time(17, 30)),
-    6: (time(10, 0), time(14, 30)),
+    5: (time(10, 0), time(18, 0)),
+    6: (time(10, 0), time(18, 0)),
 }
 
 WEEKDAY_NAMES = [

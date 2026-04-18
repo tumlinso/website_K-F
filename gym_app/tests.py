@@ -7,6 +7,7 @@ import pandas as pd
 from django.core import mail
 from django.core.cache import cache
 from django.core.management import call_command
+from django.conf import settings as django_settings
 from django.test import TestCase, override_settings
 from django.urls import reverse
 from unittest.mock import patch
@@ -215,8 +216,19 @@ class CalendarSyncTests(TestCase):
 
 
 class CalendarSyncCommandTests(TestCase):
+    @patch('gym_app.management.commands.sync_trainer_calendar.warm_live_status_calendar_snapshot_cache')
+    @patch('gym_app.management.commands.sync_trainer_calendar.warm_trainer_calendar_cache')
+    @patch('gym_app.management.commands.sync_trainer_calendar.clear_live_status_calendar_snapshot_cache')
+    @patch('gym_app.management.commands.sync_trainer_calendar.clear_trainer_calendar_cache')
     @patch('gym_app.management.commands.sync_trainer_calendar.sync_calendar')
-    def test_force_command_bypasses_freshness_window(self, mock_sync_calendar):
+    def test_force_command_bypasses_freshness_window(
+        self,
+        mock_sync_calendar,
+        mock_clear_trainer_cache,
+        mock_clear_live_status_cache,
+        mock_warm_trainer_cache,
+        mock_warm_live_status_cache,
+    ):
         mock_sync_calendar.return_value = pd.DataFrame(
             [
                 {
@@ -231,8 +243,14 @@ class CalendarSyncCommandTests(TestCase):
         call_command('sync_trainer_calendar', '--force', stdout=stdout)
 
         mock_sync_calendar.assert_called_once_with(sync_interval_seconds=0)
+        mock_clear_trainer_cache.assert_called_once_with()
+        mock_clear_live_status_cache.assert_called_once_with()
+        mock_warm_trainer_cache.assert_called_once_with()
+        mock_warm_live_status_cache.assert_called_once_with()
         self.assertIn('Synced 1 trainer calendar entries.', stdout.getvalue())
 
+    @patch('gym_app.management.commands.sync_trainer_calendar.warm_live_status_calendar_snapshot_cache')
+    @patch('gym_app.management.commands.sync_trainer_calendar.warm_trainer_calendar_cache')
     @patch('gym_app.management.commands.sync_trainer_calendar.clear_live_status_calendar_snapshot_cache')
     @patch('gym_app.management.commands.sync_trainer_calendar.clear_trainer_calendar_cache')
     @patch('gym_app.management.commands.sync_trainer_calendar.sync_calendar')
@@ -241,6 +259,8 @@ class CalendarSyncCommandTests(TestCase):
         mock_sync_calendar,
         mock_clear_trainer_cache,
         mock_clear_live_status_cache,
+        mock_warm_trainer_cache,
+        mock_warm_live_status_cache,
     ):
         mock_sync_calendar.return_value = pd.DataFrame(columns=['name', 'start', 'end'])
 
@@ -266,7 +286,16 @@ class CalendarSyncCommandTests(TestCase):
         mock_clear_trainer_cache.assert_called_once_with()
         mock_clear_live_status_cache.assert_called_once_with()
         mock_sync_calendar.assert_called_once_with(sync_interval_seconds=0)
+        mock_warm_trainer_cache.assert_called_once_with()
+        mock_warm_live_status_cache.assert_called_once_with()
         self.assertIn('Synced 0 trainer calendar entries.', stdout.getvalue())
+
+class CacheSettingsTests(TestCase):
+    def test_default_cache_uses_filebased_backend(self):
+        self.assertEqual(
+            django_settings.CACHES['default']['BACKEND'],
+            'django.core.cache.backends.filebased.FileBasedCache',
+        )
 
 
 @override_settings(GYM_TIMEZONE='UTC', TRAINER_CALENDAR_VIEW_DAYS=10)

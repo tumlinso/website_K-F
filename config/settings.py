@@ -88,6 +88,18 @@ TRAINER_CALENDAR_TIMEOUT_SECONDS = float(os.getenv('TRAINER_CALENDAR_TIMEOUT_SEC
 TRAINER_CALENDAR_VIEW_DAYS = int(os.getenv('TRAINER_CALENDAR_VIEW_DAYS', '10'))
 TRAINER_CALENDAR_CACHE_SECONDS = int(os.getenv('TRAINER_CALENDAR_CACHE_SECONDS', '900'))
 LIVE_STATUS_CACHE_SECONDS = int(os.getenv('LIVE_STATUS_CACHE_SECONDS', '300'))
+DJANGO_CACHE_DIR = os.getenv('DJANGO_CACHE_DIR', str(BASE_DIR / '.django_cache'))
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': DJANGO_CACHE_DIR,
+        'TIMEOUT': None,
+        'OPTIONS': {
+            'MAX_ENTRIES': int(os.getenv('DJANGO_CACHE_MAX_ENTRIES', '2000')),
+        },
+    }
+}
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'

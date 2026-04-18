@@ -1,8 +1,14 @@
 from django.core.management.base import BaseCommand, CommandError
 
 from gym_app.autoparse_cal import internal_ics_path, processed_csv_path, sync_calendar
-from gym_app.live_status import clear_live_status_calendar_snapshot_cache
-from gym_app.trainer_calendar import clear_trainer_calendar_cache
+from gym_app.live_status import (
+    clear_live_status_calendar_snapshot_cache,
+    warm_live_status_calendar_snapshot_cache,
+)
+from gym_app.trainer_calendar import (
+    clear_trainer_calendar_cache,
+    warm_trainer_calendar_cache,
+)
 
 
 class Command(BaseCommand):
@@ -27,12 +33,14 @@ class Command(BaseCommand):
                     if path.exists():
                         path.unlink()
 
-                clear_trainer_calendar_cache()
-                clear_live_status_calendar_snapshot_cache()
-
             df = sync_calendar(
                 sync_interval_seconds=0 if options["force"] or options["reload"] else None,
             )
+
+            clear_trainer_calendar_cache()
+            clear_live_status_calendar_snapshot_cache()
+            warm_trainer_calendar_cache()
+            warm_live_status_calendar_snapshot_cache()
         except Exception as exc:
             raise CommandError(f"Calendar sync failed: {exc}") from exc
 

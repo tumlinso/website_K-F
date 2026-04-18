@@ -199,6 +199,10 @@ def clear_live_status_calendar_snapshot_cache() -> None:
     )
 
 
+def warm_live_status_calendar_snapshot_cache() -> dict[str, object]:
+    return _get_calendar_snapshot()
+
+
 def _get_calendar_cache_version() -> str:
     if not processed_csv_path.exists():
         return "missing"

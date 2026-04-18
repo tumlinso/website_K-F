@@ -159,6 +159,7 @@ export LIVE_STATUS_CACHE_SECONDS="60"
 Notes:
 - Use your Google Calendar ICS feed URL for `TRAINER_CALENDAR_ICS_URL`.
 - The calendar sync checks Google Calendar at most every 15 minutes by default.
+- The site uses a shared file-based Django cache so the sync job can rebuild cache for Apache ahead of requests.
 - The status bar uses the gym opening hours defined in code and the trainer name from the current calendar event summary.
 - Recurring calendar events are supported.
 
@@ -186,6 +187,10 @@ Update the placeholders in `scripts/systemd/trainer-calendar-sync.service` first
 - `User` and `Group`
 - `WorkingDirectory`
 - Conda install path in `conda.sh`
+
+Make sure Apache and the sync service can both write to the shared Django cache directory:
+- `DJANGO_CACHE_DIR`
+- default: `PROJECT_ROOT/.django_cache`
 
 Then install and enable the timer:
 

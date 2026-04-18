@@ -100,6 +100,10 @@ def clear_trainer_calendar_cache(limit_days: int | None = None) -> None:
     cache.delete(_get_trainer_calendar_cache_key(limit_days))
 
 
+def warm_trainer_calendar_cache(limit_days: int | None = None) -> list[dict[str, object]]:
+    return get_trainer_calendar_days(limit_days=limit_days)
+
+
 def get_trainer_calendar_days(limit_days: int | None = None) -> list[dict[str, object]]:
     if limit_days is None:
         limit_days = settings.TRAINER_CALENDAR_VIEW_DAYS

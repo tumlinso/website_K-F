@@ -1,8 +1,16 @@
+import os
+from io import StringIO
+from pathlib import Path
+import tempfile
+
+import pandas as pd
 from django.core import mail
+from django.core.management import call_command
 from django.test import TestCase, override_settings
 from django.urls import reverse
 from unittest.mock import patch
 
+from .autoparse_cal import sync_calendar
 from .models import Contact
 
 
@@ -155,3 +163,105 @@ class DiscoverPageTests(TestCase):
         self.assertContains(response, 'Gavin Tumlinson')
         self.assertContains(response, 'Alea iacta est.')
         self.assertContains(response, 'trainer/Gavin/B9D9DC3A-70D5-4992-8CF5-737C1EAD49DE.jpeg')
+
+
+class CalendarSyncTests(TestCase):
+    def test_sync_calendar_uses_env_google_calendar_url_and_15_min_default(self):
+        calendar_df = pd.DataFrame(
+            [
+                {
+                    'name': 'Felix Gansmeier',
+                    'start': pd.Timestamp('2026-04-01T10:00:00Z'),
+                    'end': pd.Timestamp('2026-04-01T12:00:00Z'),
+                }
+            ]
+        )
+
+        with tempfile.TemporaryDirectory(dir=Path.cwd()) as temp_dir:
+            internal_ics_path = Path(temp_dir) / 'calendar.ics'
+            processed_csv_path = Path(temp_dir) / 'processed_calendar.csv'
+
+            with patch.dict(
+                os.environ,
+                {
+                    'TRAINER_CALENDAR_ICS_URL': 'https://calendar.google.com/calendar/ical/test/basic.ics',
+                    'TRAINER_CALENDAR_TIMEOUT_SECONDS': '7.5',
+                },
+                clear=False,
+            ), patch(
+                'gym_app.autoparse_cal._file_is_fresh',
+                return_value=False,
+            ) as mock_file_is_fresh, patch(
+                'gym_app.autoparse_cal.download_web_calendar_ics',
+                return_value=True,
+            ) as mock_download, patch(
+                'gym_app.autoparse_cal.parse_ics_file',
+                return_value=calendar_df,
+            ):
+                result = sync_calendar(
+                    internal_ics_path=internal_ics_path,
+                    processed_csv=processed_csv_path,
+                )
+                self.assertTrue(processed_csv_path.exists())
+
+        mock_file_is_fresh.assert_called_once_with(processed_csv_path, 900)
+        mock_download.assert_called_once_with(
+            'https://calendar.google.com/calendar/ical/test/basic.ics',
+            internal_ics_path,
+        )
+        self.assertEqual(len(result), 1)
+
+
+class CalendarSyncCommandTests(TestCase):
+    @patch('gym_app.management.commands.sync_trainer_calendar.sync_calendar')
+    def test_force_command_bypasses_freshness_window(self, mock_sync_calendar):
+        mock_sync_calendar.return_value = pd.DataFrame(
+            [
+                {
+                    'name': 'Felix Gansmeier',
+                    'start': pd.Timestamp('2026-04-01T10:00:00Z'),
+                    'end': pd.Timestamp('2026-04-01T12:00:00Z'),
+                }
+            ]
+        )
+        stdout = StringIO()
+
+        call_command('sync_trainer_calendar', '--force', stdout=stdout)
+
+        mock_sync_calendar.assert_called_once_with(sync_interval_seconds=0)
+        self.assertIn('Synced 1 trainer calendar entries.', stdout.getvalue())
+
+    @patch('gym_app.management.commands.sync_trainer_calendar.clear_live_status_calendar_snapshot_cache')
+    @patch('gym_app.management.commands.sync_trainer_calendar.clear_trainer_calendar_cache')
+    @patch('gym_app.management.commands.sync_trainer_calendar.sync_calendar')
+    def test_reload_command_clears_files_and_forces_fresh_sync(
+        self,
+        mock_sync_calendar,
+        mock_clear_trainer_cache,
+        mock_clear_live_status_cache,
+    ):
+        mock_sync_calendar.return_value = pd.DataFrame(columns=['name', 'start', 'end'])
+
+        with tempfile.TemporaryDirectory(dir=Path.cwd()) as temp_dir:
+            internal_ics = Path(temp_dir) / 'calendar.ics'
+            processed_csv = Path(temp_dir) / 'processed_calendar.csv'
+            internal_ics.write_text('old ics', encoding='utf-8')
+            processed_csv.write_text('name,start,end\n', encoding='utf-8')
+            stdout = StringIO()
+
+            with patch(
+                'gym_app.management.commands.sync_trainer_calendar.internal_ics_path',
+                internal_ics,
+            ), patch(
+                'gym_app.management.commands.sync_trainer_calendar.processed_csv_path',
+                processed_csv,
+            ):
+                call_command('sync_trainer_calendar', '--reload', stdout=stdout)
+
+            self.assertFalse(internal_ics.exists())
+            self.assertFalse(processed_csv.exists())
+
+        mock_clear_trainer_cache.assert_called_once_with()
+        mock_clear_live_status_cache.assert_called_once_with()
+        mock_sync_calendar.assert_called_once_with(sync_interval_seconds=0)
+        self.assertIn('Synced 0 trainer calendar entries.', stdout.getvalue())

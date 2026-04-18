@@ -152,13 +152,33 @@ Set these environment variables before starting Django:
 export GYM_TIMEZONE="Europe/Berlin"
 export TRAINER_CALENDAR_ICS_URL="https://calendar.google.com/calendar/ical/.../basic.ics"
 export TRAINER_CALENDAR_TIMEOUT_SECONDS="5"
+export TRAINER_CALENDAR_SYNC_INTERVAL_SECONDS="900"
 export LIVE_STATUS_CACHE_SECONDS="60"
 ```
 
 Notes:
 - Use your Google Calendar ICS feed URL for `TRAINER_CALENDAR_ICS_URL`.
+- The calendar sync checks Google Calendar at most every 15 minutes by default.
 - The status bar uses the gym opening hours defined in code and the trainer name from the current calendar event summary.
 - Recurring calendar events are supported.
+
+To run the sync on a real 15-minute server timer, use the included management command:
+
+```bash
+python manage.py sync_trainer_calendar --force
+```
+
+If you want to manually clear the saved ICS and CSV files and reload the calendar from Google Calendar:
+
+```bash
+python manage.py sync_trainer_calendar --reload
+```
+
+Example cron entry:
+
+```cron
+*/15 * * * * cd /path/to/website_K+F && /bin/bash scripts/sync_trainer_calendar.sh >> /var/log/trainer-calendar-sync.log 2>&1
+```
 
 ### Contact Information
 Edit in `templates/gym_app/contact.html`:

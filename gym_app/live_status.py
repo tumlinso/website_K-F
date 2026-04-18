@@ -13,6 +13,9 @@ from .trainer_profiles import get_trainer_display_name, get_trainer_palette
 from .trainer_profiles import is_trainer_free
 
 
+LIVE_STATUS_CALENDAR_SNAPSHOT_CACHE_KEY = "gym_app_live_status_calendar_snapshot"
+
+
 OPENING_HOURS = {
     0: (time(6, 30), time(22, 0)),
     1: (time(8, 30), time(22, 0)),
@@ -177,7 +180,7 @@ def _get_next_calendar_event(
 
 
 def _get_calendar_snapshot() -> dict[str, object]:
-    cache_key = "gym_app_live_status_calendar_snapshot"
+    cache_key = LIVE_STATUS_CALENDAR_SNAPSHOT_CACHE_KEY
     cached_snapshot = cache.get(cache_key)
     if cached_snapshot is not None:
         return cached_snapshot
@@ -185,6 +188,10 @@ def _get_calendar_snapshot() -> dict[str, object]:
     snapshot = _get_dataframe_calendar_snapshot()
     cache.set(cache_key, snapshot, settings.LIVE_STATUS_CACHE_SECONDS)
     return snapshot
+
+
+def clear_live_status_calendar_snapshot_cache() -> None:
+    cache.delete(LIVE_STATUS_CALENDAR_SNAPSHOT_CACHE_KEY)
 
 
 def _load_calendar_df():

@@ -81,6 +81,13 @@ def _load_calendar_df():
         return load_processed_calendar_csv()
 
 
+def clear_trainer_calendar_cache(limit_days: int | None = None) -> None:
+    if limit_days is None:
+        limit_days = settings.TRAINER_CALENDAR_VIEW_DAYS
+
+    cache.delete(f"{CALENDAR_CACHE_KEY}_{limit_days}")
+
+
 def get_trainer_calendar_days(limit_days: int | None = None) -> list[dict[str, object]]:
     if limit_days is None:
         limit_days = settings.TRAINER_CALENDAR_VIEW_DAYS

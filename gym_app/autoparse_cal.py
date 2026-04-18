@@ -8,7 +8,10 @@ from recurring_ical_events import of as recurring_events
 import requests
 
 BASE_DIR = Path(__file__).resolve().parents[1]
-ics_address_webcal = "https://calendar.google.com/calendar/ical/fcpabteilung16%40gmail.com/public/basic.ics"
+DEFAULT_TRAINER_CALENDAR_ICS_URL = (
+    "https://calendar.google.com/calendar/ical/"
+    "fcpabteilung16%40gmail.com/public/basic.ics"
+)
 internal_ics_path = BASE_DIR / "gym_app" / "static" / "ics" / "calendar.ics"
 processed_csv_path = BASE_DIR / "gym_app" / "static" / "ics" / "processed_calendar.csv"
 
@@ -89,7 +92,7 @@ drop_keys_cased = [
 
 def download_web_calendar_ics(ics_address_webcal, save_path=internal_ics_path):
     try:
-        response = requests.get(ics_address_webcal, timeout=10)
+        response = requests.get(ics_address_webcal, timeout=_get_timeout_seconds())
         response.raise_for_status()
         save_path.parent.mkdir(parents=True, exist_ok=True)
         with save_path.open("w", encoding="utf-8") as f:
@@ -101,7 +104,18 @@ def download_web_calendar_ics(ics_address_webcal, save_path=internal_ics_path):
         return False
 
 def _get_sync_interval_seconds():
-    return int(os.getenv("TRAINER_CALENDAR_SYNC_INTERVAL_SECONDS", "1800"))
+    return int(os.getenv("TRAINER_CALENDAR_SYNC_INTERVAL_SECONDS", "900"))
+
+
+def _get_timeout_seconds():
+    return float(os.getenv("TRAINER_CALENDAR_TIMEOUT_SECONDS", "5"))
+
+
+def _get_calendar_ics_url():
+    return (
+        os.getenv("TRAINER_CALENDAR_ICS_URL", "").strip()
+        or DEFAULT_TRAINER_CALENDAR_ICS_URL
+    )
 
 
 def _get_parse_window_days():
@@ -204,7 +218,7 @@ def load_processed_calendar_csv(path=processed_csv_path):
     return df
 
 def sync_calendar(
-        ics_address_webcal = ics_address_webcal,
+        ics_address_webcal = None,
         internal_ics_path = internal_ics_path,
         person_map = person_map,
         processed_csv = processed_csv_path,
@@ -212,6 +226,9 @@ def sync_calendar(
         lookback_days = None,
         lookahead_days = None,
         ):
+    if ics_address_webcal is None:
+        ics_address_webcal = _get_calendar_ics_url()
+
     if sync_interval_seconds is None:
         sync_interval_seconds = _get_sync_interval_seconds()
 

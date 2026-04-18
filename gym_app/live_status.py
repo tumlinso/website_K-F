@@ -8,7 +8,7 @@ from dateutil.rrule import rrulestr
 from django.conf import settings
 from django.core.cache import cache
 
-from .autoparse_cal import load_processed_calendar_csv, sync_calendar
+from .autoparse_cal import load_processed_calendar_csv, processed_csv_path, sync_calendar
 from .trainer_profiles import get_trainer_display_name, get_trainer_palette
 from .trainer_profiles import is_trainer_free
 
@@ -180,7 +180,9 @@ def _get_next_calendar_event(
 
 
 def _get_calendar_snapshot() -> dict[str, object]:
-    cache_key = LIVE_STATUS_CALENDAR_SNAPSHOT_CACHE_KEY
+    cache_key = (
+        f"{LIVE_STATUS_CALENDAR_SNAPSHOT_CACHE_KEY}_{_get_calendar_cache_version()}"
+    )
     cached_snapshot = cache.get(cache_key)
     if cached_snapshot is not None:
         return cached_snapshot
@@ -192,6 +194,16 @@ def _get_calendar_snapshot() -> dict[str, object]:
 
 def clear_live_status_calendar_snapshot_cache() -> None:
     cache.delete(LIVE_STATUS_CALENDAR_SNAPSHOT_CACHE_KEY)
+    cache.delete(
+        f"{LIVE_STATUS_CALENDAR_SNAPSHOT_CACHE_KEY}_{_get_calendar_cache_version()}"
+    )
+
+
+def _get_calendar_cache_version() -> str:
+    if not processed_csv_path.exists():
+        return "missing"
+
+    return str(processed_csv_path.stat().st_mtime_ns)
 
 
 def _load_calendar_df():

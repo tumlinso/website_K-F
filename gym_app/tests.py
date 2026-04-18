@@ -5,11 +5,13 @@ import tempfile
 
 import pandas as pd
 from django.core import mail
+from django.core.cache import cache
 from django.core.management import call_command
 from django.test import TestCase, override_settings
 from django.urls import reverse
 from unittest.mock import patch
 
+from . import live_status, trainer_calendar
 from .autoparse_cal import sync_calendar
 from .models import Contact
 
@@ -265,3 +267,75 @@ class CalendarSyncCommandTests(TestCase):
         mock_clear_live_status_cache.assert_called_once_with()
         mock_sync_calendar.assert_called_once_with(sync_interval_seconds=0)
         self.assertIn('Synced 0 trainer calendar entries.', stdout.getvalue())
+
+
+@override_settings(GYM_TIMEZONE='UTC', TRAINER_CALENDAR_VIEW_DAYS=10)
+class CalendarCacheInvalidationTests(TestCase):
+    def setUp(self):
+        cache.clear()
+
+    def test_trainer_calendar_cache_refreshes_when_processed_csv_changes(self):
+        now = pd.Timestamp.now(tz='UTC')
+        first_df = pd.DataFrame(
+            [
+                {
+                    'name': 'Thomas Gansmeier',
+                    'start': now + pd.Timedelta(hours=1),
+                    'end': now + pd.Timedelta(hours=2),
+                }
+            ]
+        )
+        second_df = pd.DataFrame(
+            [
+                {
+                    'name': 'Gavin Tumlinson',
+                    'start': now + pd.Timedelta(hours=3),
+                    'end': now + pd.Timedelta(hours=4),
+                }
+            ]
+        )
+
+        with tempfile.TemporaryDirectory(dir=Path.cwd()) as temp_dir:
+            processed_csv = Path(temp_dir) / 'processed_calendar.csv'
+            processed_csv.write_text('first', encoding='utf-8')
+
+            with patch(
+                'gym_app.trainer_calendar.processed_csv_path',
+                processed_csv,
+            ), patch(
+                'gym_app.trainer_calendar._load_calendar_df',
+                side_effect=[first_df, second_df],
+            ) as mock_load_calendar_df:
+                first_result = trainer_calendar.get_trainer_calendar_days(limit_days=10)
+                processed_csv.write_text('second', encoding='utf-8')
+                second_result = trainer_calendar.get_trainer_calendar_days(limit_days=10)
+
+        first_day_with_events = next(day for day in first_result if day['events'])
+        second_day_with_events = next(day for day in second_result if day['events'])
+
+        self.assertEqual(mock_load_calendar_df.call_count, 2)
+        self.assertEqual(first_day_with_events['events'][0]['trainer_name'], 'Thomas')
+        self.assertEqual(second_day_with_events['events'][0]['trainer_name'], 'Gavin')
+
+    def test_live_status_cache_refreshes_when_processed_csv_changes(self):
+        first_snapshot = {'state': 'ok', 'events': [{'summary': 'Felix Gansmeier'}]}
+        second_snapshot = {'state': 'ok', 'events': [{'summary': 'Thomas Gansmeier'}]}
+
+        with tempfile.TemporaryDirectory(dir=Path.cwd()) as temp_dir:
+            processed_csv = Path(temp_dir) / 'processed_calendar.csv'
+            processed_csv.write_text('first', encoding='utf-8')
+
+            with patch(
+                'gym_app.live_status.processed_csv_path',
+                processed_csv,
+            ), patch(
+                'gym_app.live_status._get_dataframe_calendar_snapshot',
+                side_effect=[first_snapshot, second_snapshot],
+            ) as mock_get_snapshot:
+                first_result = live_status._get_calendar_snapshot()
+                processed_csv.write_text('second', encoding='utf-8')
+                second_result = live_status._get_calendar_snapshot()
+
+        self.assertEqual(mock_get_snapshot.call_count, 2)
+        self.assertEqual(first_result['events'][0]['summary'], 'Felix Gansmeier')
+        self.assertEqual(second_result['events'][0]['summary'], 'Thomas Gansmeier')

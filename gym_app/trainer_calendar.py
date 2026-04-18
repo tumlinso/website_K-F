@@ -8,7 +8,7 @@ from django.conf import settings
 from django.core.cache import cache
 from django.utils import timezone
 
-from .autoparse_cal import load_processed_calendar_csv, sync_calendar
+from .autoparse_cal import load_processed_calendar_csv, processed_csv_path, sync_calendar
 from .live_status import OPENING_HOURS
 from .trainer_profiles import (
     get_trainer_display_name,
@@ -81,18 +81,30 @@ def _load_calendar_df():
         return load_processed_calendar_csv()
 
 
+def _get_calendar_cache_version() -> str:
+    if not processed_csv_path.exists():
+        return "missing"
+
+    return str(processed_csv_path.stat().st_mtime_ns)
+
+
+def _get_trainer_calendar_cache_key(limit_days: int) -> str:
+    return f"{CALENDAR_CACHE_KEY}_{limit_days}_{_get_calendar_cache_version()}"
+
+
 def clear_trainer_calendar_cache(limit_days: int | None = None) -> None:
     if limit_days is None:
         limit_days = settings.TRAINER_CALENDAR_VIEW_DAYS
 
     cache.delete(f"{CALENDAR_CACHE_KEY}_{limit_days}")
+    cache.delete(_get_trainer_calendar_cache_key(limit_days))
 
 
 def get_trainer_calendar_days(limit_days: int | None = None) -> list[dict[str, object]]:
     if limit_days is None:
         limit_days = settings.TRAINER_CALENDAR_VIEW_DAYS
 
-    cache_key = f"{CALENDAR_CACHE_KEY}_{limit_days}"
+    cache_key = _get_trainer_calendar_cache_key(limit_days)
     cached = cache.get(cache_key)
     if cached is not None:
         return cached

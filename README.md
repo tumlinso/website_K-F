@@ -180,6 +180,31 @@ Example cron entry:
 */15 * * * * cd /path/to/website_K+F && /bin/bash scripts/sync_trainer_calendar.sh >> /var/log/trainer-calendar-sync.log 2>&1
 ```
 
+If the site runs under Apache on Linux, `systemd` is usually the cleaner option. Template units are included in `scripts/systemd/`.
+
+Update the placeholders in `scripts/systemd/trainer-calendar-sync.service` first:
+- `User` and `Group`
+- `WorkingDirectory`
+- Conda install path in `conda.sh`
+
+Then install and enable the timer:
+
+```bash
+sudo cp scripts/systemd/trainer-calendar-sync.service /etc/systemd/system/
+sudo cp scripts/systemd/trainer-calendar-sync.timer /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable --now trainer-calendar-sync.timer
+```
+
+Useful checks:
+
+```bash
+sudo systemctl status trainer-calendar-sync.timer
+sudo systemctl list-timers trainer-calendar-sync.timer
+sudo systemctl start trainer-calendar-sync.service
+sudo journalctl -u trainer-calendar-sync.service -n 50 --no-pager
+```
+
 ### Contact Information
 Edit in `templates/gym_app/contact.html`:
 - Address

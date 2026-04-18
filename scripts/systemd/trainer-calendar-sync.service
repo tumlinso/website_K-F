@@ -1,0 +1,12 @@
+[Unit]
+Description=Sync trainer calendar from Google Calendar
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/website_K+F
+ExecStart=/bin/bash -lc 'source /opt/miniconda3/etc/profile.d/conda.sh && conda activate envFCP && python manage.py sync_trainer_calendar --force'
+

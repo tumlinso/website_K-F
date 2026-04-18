@@ -7,6 +7,5 @@ After=network-online.target
 Type=oneshot
 User=www-data
 Group=www-data
-WorkingDirectory=/var/www/website_K+F
-ExecStart=/bin/bash -lc 'source /opt/miniconda3/etc/profile.d/conda.sh && conda activate envFCP && python manage.py sync_trainer_calendar --force'
-
+WorkingDirectory=/home/kraftundfitness/website_K-F
+ExecStart=/home/kraftundfitness/website_K-F/venv/bin/python /home/kraftundfitness/website_K-F/manage.py sync_trainer_calendar --force

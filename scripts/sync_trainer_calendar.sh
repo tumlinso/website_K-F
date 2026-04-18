@@ -7,6 +7,8 @@ cd "$PROJECT_ROOT"
 
 if [ -f ".venv/bin/activate" ]; then
   . ".venv/bin/activate"
+elif [ -f "venv/bin/activate" ]; then
+  . "venv/bin/activate"
 fi
 
 python manage.py sync_trainer_calendar --force
